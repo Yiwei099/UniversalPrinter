@@ -45,26 +45,11 @@ fun ComTopBar(
             textAlign = TextAlign.Center,
             fontSize = 18.sp,
         )
-        Button(
-            //点击事件
-            onClick = onActionClick,
-            //修饰：控件靠右
+        ComButton(
             modifier = Modifier.align(Alignment.CenterEnd),
-            //颜色表现
-            colors = ButtonDefaults.buttonColors(
-                //容器颜色
-                containerColor = MaterialTheme.colorScheme.primary,
-                //内容颜色
-                contentColor = White
-            ),
-            //圆角尺寸
-            shape = MaterialTheme.shapes.small
-        ) {
-            Text(
-                text = actionTitle,
-                fontSize = 14.sp,
-            )
-        }
+            click = onActionClick,
+            value = actionTitle
+        )
     }
 }
 

@@ -12,29 +12,20 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.eiviayw.universalprinter.R
 import com.eiviayw.universalprinter.ui.theme.Black141414
 
-/**
- * 选项
- * @param title 标题
- * @param value 值
- * @param onClick 点击事件
- */
 @Composable
-fun ComItemOption(
-    title: String,
-    value: String,
-    onClick: () -> Unit = {}
+fun ChoseOption(
+    title:String = "",
+    chooseState:Boolean = false,
+    click:()->Unit = {}
 ) {
     Column(
-        modifier = Modifier.padding(10.dp,0.dp).clickable {
-            onClick.invoke()
-        },
+        modifier = Modifier.padding(10.dp,0.dp).clickable { click.invoke() },
     ) {
         Row(
             modifier = Modifier.fillMaxWidth().padding(0.dp,10.dp,0.dp,10.dp),
@@ -42,20 +33,14 @@ fun ComItemOption(
         ){
             Text(
                 text = title,
+                modifier = Modifier.weight(1f),
                 fontSize = 14.sp,
                 color = Black141414,
-            )
-            Text(
-                text = value,
-                fontSize = 14.sp,
-                color = Black141414,
-                modifier = Modifier.weight(1.0f),
-                textAlign = TextAlign.End
             )
             Image(
-                painter = painterResource(id = R.mipmap.next),
+                painter = painterResource(id = if (chooseState) R.mipmap.choose else R.mipmap.un_choose),
                 contentDescription = "下一步",
-                modifier = Modifier.size(12.dp)
+                modifier = Modifier.size(14.dp)
             )
         }
         ComLine()
@@ -64,6 +49,6 @@ fun ComItemOption(
 
 @Preview(showBackground = true)
 @Composable
-fun ComItemOptionPreview() {
-    ComItemOption(title = "周杰伦", value = "七里香", onClick = {})
+fun ChoseOptionPreview() {
+    ChoseOption(title = "周杰伦", chooseState = true)
 }

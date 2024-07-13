@@ -17,6 +17,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.eiviayw.universalprinter.ui.theme.UniversalPrinterTheme
+import com.eiviayw.universalprinter.util.UsbBroadcastReceiver
 import com.eiviayw.universalprinter.views.ComItemOption
 import com.eiviayw.universalprinter.views.ComTopBar
 import com.eiviayw.universalprinter.views.ComVerticalLine

@@ -15,3 +15,4 @@ val White = Color(0xffffffff)
 
 val GrayE3E3E3 = Color(0xFFE3E3E3)
 val Black141414 = Color(0xFF141414)
+val ColorE9E9E9 = Color(0xFFE9E9E9)
