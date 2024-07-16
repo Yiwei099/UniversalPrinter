@@ -1,5 +1,6 @@
 package com.eiviayw.universalprinter.dialog
 
+import android.hardware.usb.UsbDevice
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -26,6 +27,7 @@ import com.eiviayw.universalprinter.bean.ConnectMode
 import com.eiviayw.universalprinter.bean.PrinterMode
 import com.eiviayw.universalprinter.ui.theme.ColorE9E9E9
 import com.eiviayw.universalprinter.ui.theme.GrayE3E3E3
+import com.eiviayw.universalprinter.viewMode.MainViewMode
 import com.eiviayw.universalprinter.views.ChoseOption
 import com.eiviayw.universalprinter.views.ComButton
 
@@ -85,6 +87,29 @@ fun PrinterModeDialog(
         cancel = cancel,
         confirm = {
             confirm.invoke(chooseMode)
+        }
+    )
+}
+
+@Composable
+fun UsbPrinterDialog(
+    modifier: Modifier,
+    devicesList:List<UsbDevice>,
+    cancel: () -> Unit = {},
+    confirm: (UsbDevice) -> Unit = {}
+){
+    var chooseDevice by remember { mutableStateOf(devicesList.firstOrNull()) }
+    ItemOptionList(
+        data = devicesList,
+        modifier = modifier,
+        getItemName = { it.manufacturerName ?: "" },
+        getChooseState = { chooseDevice?.deviceName == it.deviceName },
+        onItemClick = {
+            chooseDevice = it
+        },
+        cancel = cancel,
+        confirm = {
+            chooseDevice?.let { confirm.invoke(it) }
         }
     )
 }
