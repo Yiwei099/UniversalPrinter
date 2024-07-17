@@ -25,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.eiviayw.universalprinter.bean.ConnectMode
 import com.eiviayw.universalprinter.bean.PrinterMode
+import com.eiviayw.universalprinter.bean.SDKMode
 import com.eiviayw.universalprinter.ui.theme.ColorE9E9E9
 import com.eiviayw.universalprinter.ui.theme.GrayE3E3E3
 import com.eiviayw.universalprinter.viewMode.MainViewMode
@@ -81,6 +82,32 @@ fun PrinterModeDialog(
         modifier = modifier,
         getItemName = { it.label },
         getChooseState = { it.value == chooseMode.value },
+        onItemClick = {
+            chooseMode = it
+        },
+        cancel = cancel,
+        confirm = {
+            confirm.invoke(chooseMode)
+        }
+    )
+}
+
+@Composable
+fun SDKModeDialog(
+    modifier: Modifier,
+    defaultChooseMode: SDKMode = SDKMode.NONE,
+    dataList: List<SDKMode> = emptyList<SDKMode>(),
+    cancel: () -> Unit = {},
+    confirm: (SDKMode) -> Unit = {}
+) {
+
+    var chooseMode by remember { mutableStateOf(defaultChooseMode) }
+
+    ItemOptionList(
+        data = dataList,
+        modifier = modifier,
+        getItemName = { it.label },
+        getChooseState = { it.label == chooseMode.label },
         onItemClick = {
             chooseMode = it
         },
@@ -153,7 +180,7 @@ fun <T> ItemOptionList(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(0.dp, 10.dp),
-                horizontalArrangement = Arrangement.Absolute.SpaceEvenly
+                horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 ComButton(
                     value = "取消",
@@ -167,10 +194,4 @@ fun <T> ItemOptionList(
             }
         }
     }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ConnectModeDialogPreview() {
-    ConnectModeDialog(modifier = Modifier)
 }

@@ -14,7 +14,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -23,6 +25,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.ViewModelProvider
+import com.eiviayw.print.base.BasePrinter
+import com.eiviayw.universalprinter.bean.ConnectMode
 import com.eiviayw.universalprinter.dialog.ConnectModeDialog
 import com.eiviayw.universalprinter.ui.theme.UniversalPrinterTheme
 import com.eiviayw.universalprinter.util.UsbBroadcastReceiver
@@ -91,22 +95,31 @@ class MainActivity : ComponentActivity() {
 fun Body(
     viewMode: MainViewMode
 ) {
-    var createState by remember { mutableStateOf(false) }
+    var createState:State<Boolean> = viewMode.openCreatePrinterView.observeAsState(false)
+    var printerList:State<MutableList<BasePrinter>> = viewMode.printerList.observeAsState(mutableListOf())
 
     Column {
         ComTopBar(
             title = "打印助手",
-            actionTitle = if (createState) "返回" else "创建",
-            onActionClick = { createState = !createState }
+            actionTitle = if (createState.value) "返回" else "创建",
+            onActionClick = {
+                if (createState.value){
+                    viewMode.closeCreatePrinterView()
+                }else{
+                    viewMode.openCreatePrinterView()
+                }
+            }
         )
         Row {
-            PrinterListView(modifier = Modifier.weight(3f))
-            if (createState){
-                ComVerticalLine()
-                CreatePrinterView(
-                    modifier = Modifier.weight(7f),
-                    viewMode = viewMode
-                )
+            PrinterListView(modifier = Modifier.weight(3f),viewMode)
+            if (printerList.value.isNotEmpty() || createState.value){
+                if (createState.value){
+                    ComVerticalLine()
+                    CreatePrinterView(
+                        modifier = Modifier.weight(7f),
+                        viewMode = viewMode
+                    )
+                }
             }else{
                 EmptyView(tips = "点击右上角【创建】打印机开始体验吧~~")
             }
@@ -117,25 +130,25 @@ fun Body(
 }
 
 @Composable
-fun PrinterListView(modifier: Modifier = Modifier) {
-    val printerList = mutableListOf<String>().apply {
-//        add("打印机1")
-//        add("打印机2")
-//        add("打印机3")
-//        add("打印机4")
-//        add("打印机5")
-    }
+fun PrinterListView(
+    modifier: Modifier = Modifier,
+    viewMode: MainViewMode = MainViewMode()
+) {
+    val printerList: State<MutableList<BasePrinter>> = viewMode.printerList.observeAsState(mutableListOf())
     Column(
         modifier
     ) {
-        if (printerList.isEmpty()) {
+        if (printerList.value.isEmpty()) {
             EmptyView(tips = "尚未添加打印机")
         } else {
-            for (printer in printerList) {
-                ComItemOption(title = printer, value = "周杰伦", onClick = {
-                })
+            for (index in 0 until  printerList.value.size) {
+                ComItemOption(
+                    title = "打印机$index",
+                    value = "",
+                    onClick = {
+                    }
+                )
             }
         }
-
     }
 }

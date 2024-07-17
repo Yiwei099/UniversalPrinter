@@ -1,6 +1,8 @@
 package com.eiviayw.universalprinter
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -18,10 +20,14 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.eiviayw.universalprinter.bean.ConnectMode
 import com.eiviayw.universalprinter.bean.PrinterMode
+import com.eiviayw.universalprinter.bean.SDKMode
 import com.eiviayw.universalprinter.dialog.ConnectModeDialog
 import com.eiviayw.universalprinter.dialog.PrinterModeDialog
+import com.eiviayw.universalprinter.dialog.SDKModeDialog
 import com.eiviayw.universalprinter.dialog.UsbPrinterDialog
+import com.eiviayw.universalprinter.ui.theme.ColorE9E9E9
 import com.eiviayw.universalprinter.viewMode.MainViewMode
+import com.eiviayw.universalprinter.views.ComButton
 import com.eiviayw.universalprinter.views.ComItemOption
 
 /**
@@ -34,10 +40,13 @@ fun CreatePrinterView(
 ) {
     val connectMode: State<ConnectMode> = viewMode.connectMode.observeAsState(ConnectMode.NONE)
     val printerMode: State<PrinterMode> = viewMode.printerMode.observeAsState(PrinterMode.NONE)
+    val sdkMode: State<SDKMode> = viewMode.sdkMode.observeAsState(SDKMode.NONE)
     val usbDevice = viewMode.choseUSBPrinter.observeAsState()
     val openPrinterModeChoseDialog: State<Boolean> = viewMode.openPrinterModeChoseDialog.observeAsState(false)
     val openConnectModeChoseDialog: State<Boolean> = viewMode.openConnectModeChoseDialog.observeAsState(false)
     val openPrinterChoseDialog: State<Boolean> = viewMode.openPrinterChoseDialog.observeAsState(false)
+
+    val openSDKModeChoseDialog: State<Boolean> = viewMode.openSDKModeChoseDialog.observeAsState(false)
 
     Column(modifier = modifier.padding(0.dp,0.dp,20.dp,0.dp)) {
         StepOption(
@@ -59,6 +68,16 @@ fun CreatePrinterView(
         }
 
         if (printerMode.value != PrinterMode.NONE){
+            StepOption(
+                modifier = Modifier.padding(0.dp,10.dp),
+                stepTitle = "3. 选择SDK策略",
+                stepTips = "SDK策略",
+                value = sdkMode.value.label){
+                viewMode.openSDKModeChoseDialog()
+            }
+        }
+
+        if (sdkMode.value != SDKMode.NONE){
             val tips = when(connectMode.value){
                 ConnectMode.BLE -> "蓝牙"
                 ConnectMode.USB -> "USB"
@@ -67,14 +86,29 @@ fun CreatePrinterView(
             }
             StepOption(
                 modifier = Modifier.padding(0.dp,10.dp),
-                stepTitle = "3. 选择 $tips 打印机",
+                stepTitle = "4. 选择 $tips 打印机",
                 stepTips = "打印机",
                 value = usbDevice.value?.manufacturerName ?: ""){
                 viewMode.openPrinterChoseDialog()
             }
         }
+
+        usbDevice.value?.let {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 10.dp),
+                horizontalArrangement = Arrangement.End
+            ) {
+                ComButton(
+                    value = "保存",
+                    click = { viewMode.createPrinter() }
+                )
+            }
+        }
     }
 
+    //选择连接方式
     if (openConnectModeChoseDialog.value) {
         Dialog(onDismissRequest = { viewMode.closeConnectModeChoseDialog() }) {
             ConnectModeDialog(
@@ -94,6 +128,7 @@ fun CreatePrinterView(
         }
     }
 
+    //选择打印模式
     if (openPrinterModeChoseDialog.value) {
         Dialog(onDismissRequest = { viewMode.closePrinterModeChoseDialog() }) {
             PrinterModeDialog(
@@ -113,6 +148,27 @@ fun CreatePrinterView(
         }
     }
 
+    if (openSDKModeChoseDialog.value){
+        Dialog(onDismissRequest = { viewMode.closeSDKModeChoseDialog() }) {
+            SDKModeDialog(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .padding(50.dp, 20.dp),
+                defaultChooseMode = sdkMode.value,
+                dataList = viewMode.getSDKModeList(),
+                cancel = {
+                    viewMode.closeSDKModeChoseDialog()
+                },
+                confirm = {
+                    viewMode.notifySDKMode(it)
+                    viewMode.closeSDKModeChoseDialog()
+                }
+            )
+        }
+    }
+
+    //选择Usb打印机
     if (openPrinterChoseDialog.value){
         Dialog(onDismissRequest = { viewMode.closePrinterChoseDialog() }) {
             UsbPrinterDialog(
