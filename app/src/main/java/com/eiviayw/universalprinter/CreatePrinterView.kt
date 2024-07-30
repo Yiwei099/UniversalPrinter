@@ -24,6 +24,7 @@ import com.eiviayw.universalprinter.dialog.UsbPrinterDialog
 import com.eiviayw.universalprinter.viewMode.MainViewMode
 import com.eiviayw.universalprinter.views.ComButton
 import com.eiviayw.universalprinter.views.ComItemOption
+import com.eiviayw.universalprinter.views.StepOption
 
 /**
  * 创建打印机
@@ -226,19 +227,5 @@ fun CreatePrinterView(
     }
 }
 
-@Composable
-fun StepOption(
-    modifier: Modifier = Modifier,
-    stepTips: String = "",
-    stepTitle: String = "",
-    value: String = "",
-    onClick: () -> Unit = {}
-) {
-    Column(
-        modifier = modifier
-    ) {
-        Text(text = stepTips)
-        ComItemOption(title = stepTitle, value = value, onClick = onClick)
-    }
-}
+
 

@@ -62,6 +62,22 @@ fun ComItemOption(
     }
 }
 
+@Composable
+fun StepOption(
+    modifier: Modifier = Modifier,
+    stepTips: String = "",
+    stepTitle: String = "",
+    value: String = "",
+    onClick: () -> Unit = {}
+) {
+    Column(
+        modifier = modifier
+    ) {
+        Text(text = stepTips)
+        ComItemOption(title = stepTitle, value = value, onClick = onClick)
+    }
+}
+
 @Preview(showBackground = true)
 @Composable
 fun ComItemOptionPreview() {

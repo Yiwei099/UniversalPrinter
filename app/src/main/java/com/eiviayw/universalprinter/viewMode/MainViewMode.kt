@@ -14,8 +14,11 @@ import com.eiviayw.print.gprinter.TscUsbGPrinter
 import com.eiviayw.universalprinter.BaseApplication
 import com.eiviayw.universalprinter.bean.BuildMode
 import com.eiviayw.universalprinter.bean.ConnectMode
+import com.eiviayw.universalprinter.bean.PaperMode
 import com.eiviayw.universalprinter.bean.PrinterMode
 import com.eiviayw.universalprinter.bean.SDKMode
+import com.eiviayw.universalprinter.provide.LabelProvide
+import com.eiviayw.universalprinter.provide.PrintDataProvide
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -83,8 +86,17 @@ class MainViewMode : ViewModel() {
     private val _printerList = MutableStateFlow<List<BasePrinter>>(mutableListOf())
     val printerList = _printerList.asStateFlow()
 
+    private val _choosePrinter = MutableLiveData<BasePrinter?>(null)
+    var choosePrinter:LiveData<BasePrinter?> = _choosePrinter
+
+    private val bitmapData by lazy { PrintDataProvide.getInstance().getBitmapArray() }
+    private val tscBitmapData by lazy { LabelProvide.getInstance().getTscBitmapArray() }
 
     //<editor-fold desc="视图控制">
+    fun openStartPrintView(printer: BasePrinter?) {
+        _choosePrinter.value = printer
+    }
+
     /**
      * 显示创建打印机视图
      */
@@ -271,6 +283,9 @@ class MainViewMode : ViewModel() {
         }
     }
 
+    /**
+     * 创建蓝牙打印机
+     */
     private fun createBlePrinter(device: BluetoothDevice) {
         when (_printerMode.value) {
             PrinterMode.TSC -> TscBtGPrinter(BaseApplication.getInstance(), device.address)
@@ -284,6 +299,9 @@ class MainViewMode : ViewModel() {
         }
     }
 
+    /**
+     * 创建USB打印机
+     */
     private fun createUSBPrinter(usbDevice: UsbDevice) {
         when (_printerMode.value) {
             PrinterMode.TSC -> {
@@ -311,10 +329,24 @@ class MainViewMode : ViewModel() {
         }
     }
 
+    /**
+     * 重置参数
+     */
     private fun reSetParam() {
         _connectMode.value = ConnectMode.NONE
         _printerMode.value = PrinterMode.NONE
         _sdkMode.value = SDKMode.NONE
         _choseUSBPrinter.value = null
+    }
+
+    /**
+     * 开始打印
+     */
+    fun startPrint(times:String, startIndex:String, topIndex:String, paperSize: PaperMode, buildMode:BuildMode){
+
+    }
+
+    fun onDestroyPrinter(){
+
     }
 }

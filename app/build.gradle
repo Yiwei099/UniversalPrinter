@@ -82,6 +82,7 @@ dependencies {
 
     implementation libs.runtime.livedata
     implementation libs.printSupport
+    implementation libs.drawingSupport
 
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit

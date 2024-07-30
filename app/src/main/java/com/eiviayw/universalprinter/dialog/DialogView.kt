@@ -24,7 +24,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.eiviayw.universalprinter.bean.BuildMode
 import com.eiviayw.universalprinter.bean.ConnectMode
+import com.eiviayw.universalprinter.bean.PaperMode
 import com.eiviayw.universalprinter.bean.PrinterMode
 import com.eiviayw.universalprinter.bean.SDKMode
 import com.eiviayw.universalprinter.ui.theme.ColorE9E9E9
@@ -208,6 +210,58 @@ fun BleToothPrinterDialog(
             }
         }
     }
+}
+
+@Composable
+fun PaperSizeDialog(
+    modifier: Modifier,
+    list: List<PaperMode>,
+    defaultChooseMode: PaperMode = PaperMode.NONE,
+    cancel: () -> Unit = {},
+    confirm: (PaperMode) -> Unit = {}
+) {
+    var chooseMode by remember { mutableStateOf(defaultChooseMode) }
+
+    ItemOptionList(
+        data = list,
+        modifier = modifier,
+        getItemName = { it.label },
+        getChooseState = { it.value == chooseMode.value },
+        onItemClick = {
+            chooseMode = it
+        },
+        cancel = cancel,
+        confirm = {
+            confirm.invoke(chooseMode)
+        }
+    )
+}
+
+@Composable
+fun BuildModeDialog(
+    modifier: Modifier,
+    defaultChooseMode: BuildMode = BuildMode.Graphic,
+    cancel: () -> Unit = {},
+    confirm: (BuildMode) -> Unit = {}
+){
+    var chooseMode by remember { mutableStateOf(defaultChooseMode) }
+
+    ItemOptionList(
+        data = mutableListOf<BuildMode>().apply {
+            add(BuildMode.Graphic)
+            add(BuildMode.Text)
+        },
+        modifier = modifier,
+        getItemName = { it.label },
+        getChooseState = { it.value == chooseMode.value },
+        onItemClick = {
+            chooseMode = it
+        },
+        cancel = cancel,
+        confirm = {
+            confirm.invoke(chooseMode)
+        }
+    )
 }
 
 @Composable
