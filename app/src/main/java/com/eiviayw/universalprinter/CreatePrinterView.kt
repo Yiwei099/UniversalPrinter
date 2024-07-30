@@ -9,23 +9,18 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.eiviayw.universalprinter.bean.ConnectMode
 import com.eiviayw.universalprinter.bean.PrinterMode
 import com.eiviayw.universalprinter.bean.SDKMode
+import com.eiviayw.universalprinter.dialog.BleToothPrinterDialog
 import com.eiviayw.universalprinter.dialog.ConnectModeDialog
 import com.eiviayw.universalprinter.dialog.PrinterModeDialog
 import com.eiviayw.universalprinter.dialog.SDKModeDialog
 import com.eiviayw.universalprinter.dialog.UsbPrinterDialog
-import com.eiviayw.universalprinter.ui.theme.ColorE9E9E9
 import com.eiviayw.universalprinter.viewMode.MainViewMode
 import com.eiviayw.universalprinter.views.ComButton
 import com.eiviayw.universalprinter.views.ComItemOption
@@ -42,58 +37,71 @@ fun CreatePrinterView(
     val printerMode: State<PrinterMode> = viewMode.printerMode.observeAsState(PrinterMode.NONE)
     val sdkMode: State<SDKMode> = viewMode.sdkMode.observeAsState(SDKMode.NONE)
     val usbDevice = viewMode.choseUSBPrinter.observeAsState()
-    val openPrinterModeChoseDialog: State<Boolean> = viewMode.openPrinterModeChoseDialog.observeAsState(false)
-    val openConnectModeChoseDialog: State<Boolean> = viewMode.openConnectModeChoseDialog.observeAsState(false)
-    val openPrinterChoseDialog: State<Boolean> = viewMode.openPrinterChoseDialog.observeAsState(false)
+    val bleDevice = viewMode.choseBlePrinter.observeAsState()
+    val openPrinterModeChoseDialog: State<Boolean> =
+        viewMode.openPrinterModeChoseDialog.observeAsState(false)
+    val openConnectModeChoseDialog: State<Boolean> =
+        viewMode.openConnectModeChoseDialog.observeAsState(false)
+    val openPrinterChoseDialog: State<Boolean> =
+        viewMode.openPrinterChoseDialog.observeAsState(false)
 
-    val openSDKModeChoseDialog: State<Boolean> = viewMode.openSDKModeChoseDialog.observeAsState(false)
+    val openSDKModeChoseDialog: State<Boolean> =
+        viewMode.openSDKModeChoseDialog.observeAsState(false)
 
-    Column(modifier = modifier.padding(0.dp,0.dp,20.dp,0.dp)) {
+    Column(modifier = modifier.padding(0.dp, 0.dp, 20.dp, 0.dp)) {
         StepOption(
-            Modifier.padding(0.dp,10.dp),
+            Modifier.padding(0.dp, 10.dp),
             stepTitle = "1. 选择连接方式",
             stepTips = "连接方式",
-            value = connectMode.value.label){
+            value = connectMode.value.label
+        ) {
             viewMode.openConnectModeChoseDialog()
         }
 
-        if (connectMode.value != ConnectMode.NONE){
+        if (connectMode.value != ConnectMode.NONE) {
             StepOption(
-                modifier = Modifier.padding(0.dp,10.dp),
+                modifier = Modifier.padding(0.dp, 10.dp),
                 stepTitle = "2. 选择打印模式",
                 stepTips = "打印模式",
-                value = printerMode.value.label){
+                value = printerMode.value.label
+            ) {
                 viewMode.openPrinterModeChoseDialog()
             }
         }
 
-        if (printerMode.value != PrinterMode.NONE){
+        if (printerMode.value != PrinterMode.NONE) {
             StepOption(
-                modifier = Modifier.padding(0.dp,10.dp),
+                modifier = Modifier.padding(0.dp, 10.dp),
                 stepTitle = "3. 选择SDK策略",
                 stepTips = "SDK策略",
-                value = sdkMode.value.label){
+                value = sdkMode.value.label
+            ) {
                 viewMode.openSDKModeChoseDialog()
             }
         }
 
-        if (sdkMode.value != SDKMode.NONE){
-            val tips = when(connectMode.value){
+        if (sdkMode.value != SDKMode.NONE) {
+            val tips = when (connectMode.value) {
                 ConnectMode.BLE -> "蓝牙"
                 ConnectMode.USB -> "USB"
                 ConnectMode.WIFI -> "Wi-fi"
                 else -> "null"
             }
             StepOption(
-                modifier = Modifier.padding(0.dp,10.dp),
+                modifier = Modifier.padding(0.dp, 10.dp),
                 stepTitle = "4. 选择 $tips 打印机",
                 stepTips = "打印机",
-                value = usbDevice.value?.manufacturerName ?: ""){
+                value = when (connectMode.value) {
+                    ConnectMode.BLE -> bleDevice.value?.name ?: ""
+                    ConnectMode.USB -> usbDevice.value?.manufacturerName ?: ""
+                    else -> ""
+                }
+            ) {
                 viewMode.openPrinterChoseDialog()
             }
         }
 
-        usbDevice.value?.let {
+        if (usbDevice.value != null || bleDevice.value != null){
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -148,7 +156,7 @@ fun CreatePrinterView(
         }
     }
 
-    if (openSDKModeChoseDialog.value){
+    if (openSDKModeChoseDialog.value) {
         Dialog(onDismissRequest = { viewMode.closeSDKModeChoseDialog() }) {
             SDKModeDialog(
                 modifier = Modifier
@@ -169,39 +177,68 @@ fun CreatePrinterView(
     }
 
     //选择Usb打印机
-    if (openPrinterChoseDialog.value){
-        Dialog(onDismissRequest = { viewMode.closePrinterChoseDialog() }) {
-            UsbPrinterDialog(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
-                    .padding(50.dp, 20.dp),
-                viewMode.usbDevicesList.value?.toList() ?: emptyList(),
-                cancel = {
-                    viewMode.closePrinterChoseDialog()
-                },
-                confirm = {
-                    viewMode.notifyChoseUSBDevice(it)
-                    viewMode.closePrinterChoseDialog()
+    if (openPrinterChoseDialog.value) {
+        when (connectMode.value) {
+            ConnectMode.USB -> {
+                Dialog(onDismissRequest = { viewMode.closePrinterChoseDialog() }) {
+                    UsbPrinterDialog(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .padding(50.dp, 20.dp),
+                        viewMode.usbDevicesList.value?.toList() ?: emptyList(),
+                        cancel = {
+                            viewMode.closePrinterChoseDialog()
+                        },
+                        confirm = {
+                            viewMode.notifyChoseUSBDevice(it)
+                            viewMode.closePrinterChoseDialog()
+                        }
+                    )
                 }
-            )
+            }
+
+            ConnectMode.BLE -> {
+                Dialog(onDismissRequest = { viewMode.closePrinterChoseDialog() }) {
+                    BleToothPrinterDialog(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .padding(50.dp, 20.dp),
+                        viewMode,
+                        bleDevice.value,
+                        cancel = {
+                            viewMode.closePrinterChoseDialog()
+                        },
+                        confirm = {
+                            viewMode.notifyChoseBleDevice(it)
+                            viewMode.closePrinterChoseDialog()
+                        }
+                    )
+                }
+            }
+
+            else -> {
+
+            }
         }
+
     }
 }
 
 @Composable
 fun StepOption(
     modifier: Modifier = Modifier,
-    stepTips:String = "",
-    stepTitle:String = "",
-    value:String = "",
-    onClick:() -> Unit = {}
+    stepTips: String = "",
+    stepTitle: String = "",
+    value: String = "",
+    onClick: () -> Unit = {}
 ) {
     Column(
         modifier = modifier
     ) {
         Text(text = stepTips)
-        ComItemOption(title = stepTitle, value = value,onClick = onClick)
+        ComItemOption(title = stepTitle, value = value, onClick = onClick)
     }
 }
 

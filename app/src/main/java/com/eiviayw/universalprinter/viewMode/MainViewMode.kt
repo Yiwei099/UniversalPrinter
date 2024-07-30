@@ -2,139 +2,155 @@ package com.eiviayw.universalprinter.viewMode
 
 import android.bluetooth.BluetoothDevice
 import android.hardware.usb.UsbDevice
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.eiviayw.print.base.BasePrinter
+import com.eiviayw.print.gprinter.EscBtGPrinter
 import com.eiviayw.print.gprinter.EscUsbGPrinter
+import com.eiviayw.print.gprinter.TscBtGPrinter
 import com.eiviayw.print.gprinter.TscUsbGPrinter
 import com.eiviayw.universalprinter.BaseApplication
 import com.eiviayw.universalprinter.bean.BuildMode
 import com.eiviayw.universalprinter.bean.ConnectMode
 import com.eiviayw.universalprinter.bean.PrinterMode
 import com.eiviayw.universalprinter.bean.SDKMode
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
 
-class MainViewMode:ViewModel() {
+class MainViewMode : ViewModel() {
     //<editor-fold desc="弹窗状态控制">
     private val _openCreatePrinterView = MutableLiveData(false)
-    var openCreatePrinterView:LiveData<Boolean> = _openCreatePrinterView
+    var openCreatePrinterView: LiveData<Boolean> = _openCreatePrinterView
 
     //打印机连接方式弹窗状态
     private val _openConnectModeChoseDialog = MutableLiveData(false)
-    var openConnectModeChoseDialog:LiveData<Boolean> = _openConnectModeChoseDialog
+    var openConnectModeChoseDialog: LiveData<Boolean> = _openConnectModeChoseDialog
 
     //打印机指令模式弹窗状态
     private val _openPrinterModeChoseDialog = MutableLiveData(false)
-    var openPrinterModeChoseDialog:LiveData<Boolean> = _openPrinterModeChoseDialog
+    var openPrinterModeChoseDialog: LiveData<Boolean> = _openPrinterModeChoseDialog
 
     //打印机设备列表弹窗状态
     private val _openPrinterChoseDialog = MutableLiveData(false)
-    var openPrinterChoseDialog:LiveData<Boolean> = _openPrinterChoseDialog
+    var openPrinterChoseDialog: LiveData<Boolean> = _openPrinterChoseDialog
 
     //指令构建方式弹窗状态
     private val _openSDKModeChoseDialog = MutableLiveData(false)
-    var openSDKModeChoseDialog:LiveData<Boolean> = _openSDKModeChoseDialog
+    var openSDKModeChoseDialog: LiveData<Boolean> = _openSDKModeChoseDialog
     //</editor-fold desc="弹窗状态控制">
 
     //<editor-fold desc="打印机参数">
     //打印机连接方式
     private val _connectMode = MutableLiveData(ConnectMode.NONE)
-    var connectMode:LiveData<ConnectMode> = _connectMode
+    var connectMode: LiveData<ConnectMode> = _connectMode
 
     //打印机指令方式
     private val _printerMode = MutableLiveData(PrinterMode.NONE)
-    var printerMode:LiveData<PrinterMode> = _printerMode
+    var printerMode: LiveData<PrinterMode> = _printerMode
 
     //构建指令方式
     private val _buildMode = MutableLiveData(BuildMode.NONE)
-    var buildMode:LiveData<BuildMode> = _buildMode
+    var buildMode: LiveData<BuildMode> = _buildMode
 
     //SDK策略
     private val _sdkMode = MutableLiveData<SDKMode>(SDKMode.NONE)
-    var sdkMode:LiveData<SDKMode> = _sdkMode
+    var sdkMode: LiveData<SDKMode> = _sdkMode
     //</editor-fold desc="打印机参数">
 
     //<editor-fold desc="USB相关">
     //Usb设备列表
     private val _usbDevicesList = MutableLiveData(mutableListOf<UsbDevice>())
-    var usbDevicesList:LiveData<MutableList<UsbDevice>> = _usbDevicesList
+    var usbDevicesList: LiveData<MutableList<UsbDevice>> = _usbDevicesList
 
     //选择的Usb设备
     private val _choseUSBPrinter = MutableLiveData<UsbDevice?>(null)
-    var choseUSBPrinter:LiveData<UsbDevice?> = _choseUSBPrinter
+    var choseUSBPrinter: LiveData<UsbDevice?> = _choseUSBPrinter
 
     //</editor-fold desc="USB相关">
 
     //<editor-fold desc="蓝牙相关">
-    private val _bleDevicesSet = MutableLiveData<MutableSet<BluetoothDevice>>(mutableSetOf())
-    var bleDeviceSet:LiveData<MutableSet<BluetoothDevice>> = _bleDevicesSet
+    private val _bleDevicesSet = MutableStateFlow<Set<BluetoothDevice>>(emptySet())
+    val bleDevicesSet = _bleDevicesSet.asStateFlow()
+
+    //选择的BLe设备
+    private val _choseBlePrinter = MutableLiveData<BluetoothDevice?>(null)
+    var choseBlePrinter: LiveData<BluetoothDevice?> = _choseBlePrinter
     //</editor-fold desc="蓝牙相关">
 
     //打印机列表
-    private val _printerList = MutableLiveData<MutableList<BasePrinter>>(mutableListOf())
-    var printerList:LiveData<MutableList<BasePrinter>> = _printerList
+    private val _printerList = MutableStateFlow<List<BasePrinter>>(mutableListOf())
+    val printerList = _printerList.asStateFlow()
+
 
     //<editor-fold desc="视图控制">
     /**
      * 显示创建打印机视图
      */
-    fun openCreatePrinterView(){
+    fun openCreatePrinterView() {
         _openCreatePrinterView.value = true
     }
 
     /**
      * 隐藏打印机视图
      */
-    fun closeCreatePrinterView(){
+    fun closeCreatePrinterView() {
         _openCreatePrinterView.value = false
     }
 
     /**
      * 打开SDK选择策略弹窗
      */
-    fun openSDKModeChoseDialog(){
+    fun openSDKModeChoseDialog() {
         _openSDKModeChoseDialog.value = true
     }
 
     /**
      * 关闭SDK选择策略弹窗
      */
-    fun closeSDKModeChoseDialog(){
+    fun closeSDKModeChoseDialog() {
         _openSDKModeChoseDialog.value = false
     }
 
     /**
      * 打开打印机选择弹窗
      */
-    fun openPrinterChoseDialog(){
+    fun openPrinterChoseDialog() {
         _openPrinterChoseDialog.value = true
     }
 
     /**
      * 关闭打印机选择弹窗
      */
-    fun closePrinterChoseDialog(){
+    fun closePrinterChoseDialog() {
         _openPrinterChoseDialog.value = false
+        //清空缓存
+        when (_connectMode.value) {
+            ConnectMode.BLE -> _bleDevicesSet.value = emptySet<BluetoothDevice>()
+            ConnectMode.USB -> _usbDevicesList.value = mutableListOf()
+            else -> {}
+        }
     }
 
     /**
      * 关闭连接模式弹窗
      */
-    fun closeConnectModeChoseDialog(){
+    fun closeConnectModeChoseDialog() {
         _openConnectModeChoseDialog.value = false
     }
 
     /**
      * 打开连接模式弹窗
      */
-    fun openConnectModeChoseDialog(){
+    fun openConnectModeChoseDialog() {
         _openConnectModeChoseDialog.value = true
     }
 
     /**
      * 关闭打印模式弹窗
      */
-    fun closePrinterModeChoseDialog(){
+    fun closePrinterModeChoseDialog() {
         _openPrinterModeChoseDialog.value = false
     }
 
@@ -147,10 +163,14 @@ class MainViewMode:ViewModel() {
     //</editor-fold desc="视图控制">
 
     //<editor-fold desc="参数设置">
+    fun notifyBleDevicesSet(device: BluetoothDevice) {
+        _bleDevicesSet.value += setOf(device)
+    }
+
     /**
      * 获取USB设备列表
      */
-    fun notifyUsbDevicesList(list:List<UsbDevice>){
+    fun notifyUsbDevicesList(list: List<UsbDevice>) {
         _usbDevicesList.value = list.toMutableList()
     }
 
@@ -162,9 +182,16 @@ class MainViewMode:ViewModel() {
     }
 
     /**
+     * 设置已选中的Ble设备
+     */
+    fun notifyChoseBleDevice(usbDevice: BluetoothDevice) {
+        _choseBlePrinter.value = usbDevice
+    }
+
+    /**
      * 设置连接模式
      */
-    fun notifyConnectMode(mode:ConnectMode){
+    fun notifyConnectMode(mode: ConnectMode) {
         _connectMode.value = mode
     }
 
@@ -178,17 +205,17 @@ class MainViewMode:ViewModel() {
     /**
      * 设置SDK策略
      */
-    fun notifySDKMode(mode:SDKMode){
+    fun notifySDKMode(mode: SDKMode) {
         _sdkMode.value = mode
     }
 
     /**
      * 获取SDK策略列表
      */
-    fun getSDKModeList():List<SDKMode>{
-        return if (_printerMode.value == PrinterMode.ESC){
+    fun getSDKModeList(): List<SDKMode> {
+        return if (_printerMode.value == PrinterMode.ESC) {
             getESCSDK()
-        }else{
+        } else {
             getTscSDK()
         }
     }
@@ -196,11 +223,11 @@ class MainViewMode:ViewModel() {
     /**
      * 获取ESC SDK策略列表
      */
-    private fun getESCSDK():List<SDKMode>{
+    private fun getESCSDK(): List<SDKMode> {
         return mutableListOf<SDKMode>().apply {
             add(SDKMode.GPrinter)
             add(SDKMode.EpsonESC)
-            if (_connectMode.value == ConnectMode.USB){
+            if (_connectMode.value == ConnectMode.USB) {
                 add(SDKMode.NativeUsb)
             }
         }
@@ -209,11 +236,11 @@ class MainViewMode:ViewModel() {
     /**
      * 获取TSC SDK策略列表
      */
-    private fun getTscSDK():List<SDKMode>{
+    private fun getTscSDK(): List<SDKMode> {
         return mutableListOf<SDKMode>().apply {
             add(SDKMode.GPrinter)
             add(SDKMode.BixolonTsc)
-            if (_connectMode.value == ConnectMode.USB){
+            if (_connectMode.value == ConnectMode.USB) {
                 add(SDKMode.NativeUsb)
             }
         }
@@ -224,32 +251,49 @@ class MainViewMode:ViewModel() {
     /**
      * 保存参数创建打印机
      */
-    fun createPrinter(){
-        when(connectMode.value){
+    fun createPrinter() {
+        when (connectMode.value) {
             ConnectMode.BLE -> {
-                //TODO
+                choseBlePrinter.value?.let { createBlePrinter(it) }
             }
+
             ConnectMode.USB -> {
                 choseUSBPrinter.value?.let { createUSBPrinter(it) }
             }
+
             ConnectMode.WIFI -> {
                 //TODO
             }
+
             else -> {
                 //TODO
             }
         }
     }
 
-    private fun createUSBPrinter(usbDevice: UsbDevice){
-        when(_printerMode.value){
-            PrinterMode.TSC ->{
+    private fun createBlePrinter(device: BluetoothDevice) {
+        when (_printerMode.value) {
+            PrinterMode.TSC -> TscBtGPrinter(BaseApplication.getInstance(), device.address)
+            PrinterMode.ESC -> EscBtGPrinter(BaseApplication.getInstance(), device.address)
+            else -> null
+        }?.let {
+            _printerList.value += listOf(it)
+            _choseBlePrinter.value = null
+            closeCreatePrinterView()
+            reSetParam()
+        }
+    }
+
+    private fun createUSBPrinter(usbDevice: UsbDevice) {
+        when (_printerMode.value) {
+            PrinterMode.TSC -> {
                 TscUsbGPrinter(
                     BaseApplication.getInstance(),
                     usbDevice.vendorId,
                     usbDevice.productId
                 )
             }
+
             PrinterMode.ESC -> {
                 EscUsbGPrinter(
                     BaseApplication.getInstance(),
@@ -257,24 +301,17 @@ class MainViewMode:ViewModel() {
                     usbDevice.productId
                 )
             }
+
             else -> null
         }?.let {
-            _printerList.value = getTempPrinter(it)
+            _printerList.value += listOf(it)
+            _choseUSBPrinter.value = null
             closeCreatePrinterView()
             reSetParam()
         }
     }
 
-    private fun getTempPrinter(newPrinter:BasePrinter):MutableList<BasePrinter>{
-        return mutableListOf<BasePrinter>().apply {
-            _printerList.value?.forEach { it->
-                add(it)
-            }
-            add(newPrinter)
-        }
-    }
-
-    private fun reSetParam(){
+    private fun reSetParam() {
         _connectMode.value = ConnectMode.NONE
         _printerMode.value = PrinterMode.NONE
         _sdkMode.value = SDKMode.NONE

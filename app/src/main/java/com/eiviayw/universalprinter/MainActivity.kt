@@ -21,6 +21,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
@@ -96,11 +97,11 @@ class MainActivity : ComponentActivity() {
                 }else{
                     when (connectMode.value) {
                         ConnectMode.USB -> {
-                            usbBroadcastReceiver.onDestroy()
+//                            usbBroadcastReceiver.onDestroy()
                         }
                         ConnectMode.BLE -> {
-                            blueToothBroadcastReceiver.onDestroy()
-                            blueToothHelper.stopDiscovery()
+                            val result = blueToothHelper.stopDiscovery()
+                            Log.d(TAG, "blueToothHelper.stopDiscovery：$result")
                         }
                         else -> {
                             Log.d(TAG, "openPrinterChoseDialog connectMode.value is other")
@@ -124,7 +125,7 @@ class MainActivity : ComponentActivity() {
         })
 
         blueToothBroadcastReceiver.setOnBleToothBroadcastListener {
-            Log.d(TAG, "OnBleToothBroadcastListener: ${it.address}")
+            viewMode.notifyBleDevicesSet(it)
         }
     }
 
@@ -189,7 +190,7 @@ fun Body(
     viewMode: MainViewMode
 ) {
     var createState:State<Boolean> = viewMode.openCreatePrinterView.observeAsState(false)
-    var printerList:State<MutableList<BasePrinter>> = viewMode.printerList.observeAsState(mutableListOf())
+    val printerList = viewMode.printerList.collectAsState(initial = emptyList())
 
     Column {
         ComTopBar(
@@ -227,11 +228,12 @@ fun PrinterListView(
     modifier: Modifier = Modifier,
     viewMode: MainViewMode = MainViewMode()
 ) {
-    val printerList: State<MutableList<BasePrinter>> = viewMode.printerList.observeAsState(mutableListOf())
+    val printerList = viewMode.printerList.collectAsState(initial = emptyList())
     Column(
         modifier
     ) {
         if (printerList.value.isEmpty()) {
+            Log.d("MainActivity", "PrinterListView: printerList isEmpty")
             EmptyView(tips = "尚未添加打印机")
         } else {
             for (index in 0 until  printerList.value.size) {

@@ -44,14 +44,14 @@ class BlueToothHelper(private val context: Context) {
         return false
     }
 
-    fun stopDiscovery() {
-        if (ActivityCompat.checkSelfPermission(
+    fun stopDiscovery():Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S && ActivityCompat.checkSelfPermission(
                 context,
                 Manifest.permission.BLUETOOTH_SCAN
             ) != PackageManager.PERMISSION_GRANTED
         ) {
-            return
+            return false
         }
-        bleAdapter?.cancelDiscovery()
+        return bleAdapter?.cancelDiscovery() ?: false
     }
 }
