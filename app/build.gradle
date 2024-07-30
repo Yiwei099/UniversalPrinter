@@ -20,12 +20,35 @@ android {
         }
     }
 
+    signingConfigs {
+        release {
+            keyAlias 'printerKeeper'
+            keyPassword 'yiwei099'
+            storeFile file('printerKeeper.jks')
+            storePassword 'yiwei099'
+        }
+//        debug {
+//            keyAlias 'printerKeeper'
+//            keyPassword 'yiwei099'
+//            storeFile file('printerKeeper.jks')
+//            storePassword 'yiwei099'
+//        }
+    }
+
     buildTypes {
+        debug {
+            minifyEnabled false
+            signingConfig signingConfigs.release
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
         release {
             minifyEnabled false
+            signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8

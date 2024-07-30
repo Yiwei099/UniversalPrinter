@@ -1,5 +1,6 @@
 package com.eiviayw.universalprinter.viewMode
 
+import android.bluetooth.BluetoothDevice
 import android.hardware.usb.UsbDevice
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -63,6 +64,11 @@ class MainViewMode:ViewModel() {
     var choseUSBPrinter:LiveData<UsbDevice?> = _choseUSBPrinter
 
     //</editor-fold desc="USB相关">
+
+    //<editor-fold desc="蓝牙相关">
+    private val _bleDevicesSet = MutableLiveData<MutableSet<BluetoothDevice>>(mutableSetOf())
+    var bleDeviceSet:LiveData<MutableSet<BluetoothDevice>> = _bleDevicesSet
+    //</editor-fold desc="蓝牙相关">
 
     //打印机列表
     private val _printerList = MutableLiveData<MutableList<BasePrinter>>(mutableListOf())
