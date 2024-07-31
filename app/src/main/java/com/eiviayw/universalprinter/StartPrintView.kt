@@ -24,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.eiviayw.print.base.BasePrinter
 import com.eiviayw.print.gprinter.EscBtGPrinter
+import com.eiviayw.print.gprinter.EscNetGPrinter
 import com.eiviayw.print.gprinter.EscUsbGPrinter
 import com.eiviayw.print.gprinter.TscBtGPrinter
 import com.eiviayw.print.gprinter.TscUsbGPrinter
@@ -51,7 +52,7 @@ fun StartPrintView(
     val choosePrinter = viewMode.choosePrinter.observeAsState()
 
     val isEscPrinter = when(choosePrinter.value){
-        is EscBtGPrinter, is EscUsbGPrinter -> true
+        is EscBtGPrinter, is EscUsbGPrinter, is EscNetGPrinter -> true
         is TscBtGPrinter,is TscUsbGPrinter -> false
         is NativeUsbPrinter -> (choosePrinter.value as NativeUsbPrinter).getCommandTypeValue() == Command.ESC
         else -> false

@@ -1,16 +1,24 @@
 package com.eiviayw.universalprinter
 
+import android.text.TextUtils
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.State
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import com.eiviayw.universalprinter.bean.ConnectMode
@@ -49,6 +57,8 @@ fun CreatePrinterView(
     val openSDKModeChoseDialog: State<Boolean> =
         viewMode.openSDKModeChoseDialog.observeAsState(false)
 
+    var netIpAddress by remember { mutableStateOf("192.168.") }
+
     Column(modifier = modifier.padding(0.dp, 0.dp, 20.dp, 0.dp)) {
         StepOption(
             Modifier.padding(0.dp, 10.dp),
@@ -82,27 +92,40 @@ fun CreatePrinterView(
         }
 
         if (sdkMode.value != SDKMode.NONE) {
-            val tips = when (connectMode.value) {
-                ConnectMode.BLE -> "蓝牙"
-                ConnectMode.USB -> "USB"
-                ConnectMode.WIFI -> "Wi-fi"
-                else -> "null"
-            }
-            StepOption(
-                modifier = Modifier.padding(0.dp, 10.dp),
-                stepTitle = "4. 选择 $tips 打印机",
-                stepTips = "打印机",
-                value = when (connectMode.value) {
-                    ConnectMode.BLE -> bleDevice.value?.name ?: ""
-                    ConnectMode.USB -> usbDevice.value?.manufacturerName ?: ""
-                    else -> ""
+            if (connectMode.value != ConnectMode.WIFI){
+                val tips = when (connectMode.value) {
+                    ConnectMode.BLE -> "蓝牙"
+                    ConnectMode.USB -> "USB"
+                    ConnectMode.WIFI -> "Wi-fi"
+                    else -> "null"
                 }
-            ) {
-                viewMode.openPrinterChoseDialog()
+                StepOption(
+                    modifier = Modifier.padding(0.dp, 10.dp),
+                    stepTitle = "4. 选择 $tips 打印机",
+                    stepTips = "打印机",
+                    value = when (connectMode.value) {
+                        ConnectMode.BLE -> bleDevice.value?.name ?: ""
+                        ConnectMode.USB -> usbDevice.value?.manufacturerName ?: ""
+                        else -> ""
+                    }
+                ) {
+                    viewMode.openPrinterChoseDialog()
+                }
+            }else{
+                OutlinedTextField(
+                    value = netIpAddress,
+                    onValueChange = { netIpAddress = it },
+                    label = { Text(text = "打印机IP地址") },
+                    modifier = Modifier.padding(0.dp,20.dp),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Ascii,
+                    ),
+                )
             }
+
         }
 
-        if (usbDevice.value != null || bleDevice.value != null){
+        if (usbDevice.value != null || bleDevice.value != null || (connectMode.value == ConnectMode.WIFI && !TextUtils.isEmpty(netIpAddress))){
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -111,7 +134,7 @@ fun CreatePrinterView(
             ) {
                 ComButton(
                     value = "保存",
-                    click = { viewMode.createPrinter() }
+                    click = { viewMode.createPrinter(netIpAddress) }
                 )
             }
         }
@@ -176,7 +199,6 @@ fun CreatePrinterView(
             )
         }
     }
-
     //选择Usb打印机
     if (openPrinterChoseDialog.value) {
         when (connectMode.value) {

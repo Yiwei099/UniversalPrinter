@@ -11,8 +11,10 @@ import com.eiviayw.library.provide.BaseProvide
 import com.eiviayw.print.base.BasePrinter
 import com.eiviayw.print.bean.mission.GraphicMission
 import com.eiviayw.print.gprinter.EscBtGPrinter
+import com.eiviayw.print.gprinter.EscNetGPrinter
 import com.eiviayw.print.gprinter.EscUsbGPrinter
 import com.eiviayw.print.gprinter.TscBtGPrinter
+import com.eiviayw.print.gprinter.TscNetGPrinter
 import com.eiviayw.print.gprinter.TscUsbGPrinter
 import com.eiviayw.print.native.NativeUsbPrinter
 import com.eiviayw.universalprinter.BaseApplication
@@ -269,28 +271,34 @@ class MainViewMode : ViewModel() {
     /**
      * 保存参数创建打印机
      */
-    fun createPrinter() {
+    fun createPrinter(idAddress:String = "") {
         if (_isModifyPrinter.value == true){
             _choosePrinter.value?.let { deletePrinter(it) }
             openStartPrintView(null)
         }
 
         when (connectMode.value) {
-            ConnectMode.BLE -> {
-                choseBlePrinter.value?.let { createBlePrinter(it) }
-            }
-
-            ConnectMode.USB -> {
-                choseUSBPrinter.value?.let { createUSBPrinter(it) }
-            }
-
-            ConnectMode.WIFI -> {
-                //TODO
-            }
-
+            ConnectMode.BLE -> choseBlePrinter.value?.let { createBlePrinter(it) }
+            ConnectMode.USB -> choseUSBPrinter.value?.let { createUSBPrinter(it) }
+            ConnectMode.WIFI -> createNetPrinter(idAddress)
             else -> {
                 //TODO
             }
+        }
+    }
+
+    private fun createNetPrinter(address:String){
+        when(_printerMode.value){
+            PrinterMode.TSC -> TscNetGPrinter(BaseApplication.getInstance(), address)
+            PrinterMode.ESC -> EscNetGPrinter(BaseApplication.getInstance(), address)
+            else -> null
+        }?.let {
+            _printerList.value = mutableListOf<BasePrinter>().apply {
+                addAll(_printerList.value)
+                add(it)
+            }
+            closeCreatePrinterView()
+            reSetParam()
         }
     }
 
