@@ -6,7 +6,10 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.eiviayw.library.draw.BitmapOption
+import com.eiviayw.library.provide.BaseProvide
 import com.eiviayw.print.base.BasePrinter
+import com.eiviayw.print.bean.mission.GraphicMission
 import com.eiviayw.print.gprinter.EscBtGPrinter
 import com.eiviayw.print.gprinter.EscUsbGPrinter
 import com.eiviayw.print.gprinter.TscBtGPrinter
@@ -17,6 +20,7 @@ import com.eiviayw.universalprinter.bean.ConnectMode
 import com.eiviayw.universalprinter.bean.PaperMode
 import com.eiviayw.universalprinter.bean.PrinterMode
 import com.eiviayw.universalprinter.bean.SDKMode
+import com.eiviayw.universalprinter.provide.EscDataProvide
 import com.eiviayw.universalprinter.provide.LabelProvide
 import com.eiviayw.universalprinter.provide.PrintDataProvide
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -88,9 +92,6 @@ class MainViewMode : ViewModel() {
 
     private val _choosePrinter = MutableLiveData<BasePrinter?>(null)
     var choosePrinter:LiveData<BasePrinter?> = _choosePrinter
-
-    private val bitmapData by lazy { PrintDataProvide.getInstance().getBitmapArray() }
-    private val tscBitmapData by lazy { LabelProvide.getInstance().getTscBitmapArray() }
 
     //<editor-fold desc="视图控制">
     fun openStartPrintView(printer: BasePrinter?) {
@@ -342,11 +343,35 @@ class MainViewMode : ViewModel() {
     /**
      * 开始打印
      */
-    fun startPrint(times:String, startIndex:String, topIndex:String, paperSize: PaperMode, buildMode:BuildMode){
+    fun startPrint(printer:BasePrinter,isEsc:Boolean,times:Int = 1, startIndex:String, topIndex:String, paperSize: PaperMode, buildMode:BuildMode){
+        var data:ByteArray? = null
+        if (isEsc){
+            val bitmapOption = when (paperSize) {
+                PaperMode.ESC_58 -> {
+                    BitmapOption(maxWidth = 384)
+                }
+                PaperMode.ESC_80 -> {
+                    BitmapOption()
+                }
+                else -> {
+                    BitmapOption()
+                }
+            }
+            data = EscDataProvide(bitmapOption).getData()
+        }
 
+        data?.let {
+            for (index in 0 until times) {
+                printer.addMission(GraphicMission(data).apply {
+                    id = "${index.plus(1)}/$times"
+                    count = times
+                    this.index = index
+                })
+            }
+        }
     }
 
-    fun onDestroyPrinter(){
-
+    fun onDestroyPrinter(printer:BasePrinter){
+        printer.onDestroy()
     }
 }

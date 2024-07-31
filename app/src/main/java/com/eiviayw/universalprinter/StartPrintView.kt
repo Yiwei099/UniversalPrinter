@@ -44,12 +44,18 @@ fun StartPrintView(
 
     val choosePrinter = viewMode.choosePrinter.observeAsState()
 
+    val isEscPrinter = when(choosePrinter.value){
+        is EscBtGPrinter, is EscUsbGPrinter -> true
+        is TscBtGPrinter,is TscUsbGPrinter -> false
+        else -> false
+    }
+
     var showPaperModeDialog by remember { mutableStateOf(false) }
     var showBuildModeDialog by remember { mutableStateOf(false) }
     var printTime by remember { mutableStateOf("1") }
     var startIndex by remember { mutableStateOf("0") }
     var topIndex by remember { mutableStateOf("0") }
-    var paperSize by remember { mutableStateOf(PaperMode.NONE) }
+    var paperSize by remember { mutableStateOf(if (isEscPrinter) PaperMode.ESC_58 else PaperMode.NONE) }
     var buildMode by remember { mutableStateOf(BuildMode.Graphic) }
 
 
@@ -107,6 +113,7 @@ fun StartPrintView(
             horizontalArrangement = Arrangement.End
         ) {
             ComButton(
+                modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
                 value = "返回",
                 containerColor = ColorE9E9E9,
                 click = {
@@ -115,35 +122,42 @@ fun StartPrintView(
             )
 
             ComButton(
+                modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
+                value = "缓存销毁",
+                containerColor = ColorE9E9E9,
+                click = {
+                    choosePrinter.value?.let {
+                        viewMode.onDestroyPrinter(it)
+                    }
+                }
+            )
+
+            ComButton(
                 value = "打印($printTime)",
-                click = {}
+                click = { choosePrinter.value?.let {
+                    viewMode.startPrint(it,isEscPrinter,printTime.toInt(),startIndex,topIndex,paperSize,buildMode)
+                } }
             )
         }
     }
 
     if (showPaperModeDialog){
-        val paperList = when(choosePrinter.value){
-            is EscBtGPrinter, is EscUsbGPrinter -> {
-                mutableListOf<PaperMode>().apply {
-                    add(PaperMode.ESC_58)
-                    add(PaperMode.ESC_80)
-                    add(PaperMode.NONE)
-                }
+        val paperList = if(isEscPrinter) {
+            mutableListOf<PaperMode>().apply {
+                add(PaperMode.ESC_58)
+                add(PaperMode.ESC_80)
             }
-            is TscBtGPrinter,is TscUsbGPrinter -> {
-                mutableListOf<PaperMode>().apply {
-                    add(PaperMode.TSC_3020)
-                    add(PaperMode.TSC_4030)
-                    add(PaperMode.TSC_4060)
-                    add(PaperMode.TSC_4080)
-                    add(PaperMode.TSC_6040)
-                    add(PaperMode.TSC_6080)
-                    add(PaperMode.NONE)
-                }
+        }else{
+            mutableListOf<PaperMode>().apply {
+                add(PaperMode.TSC_3020)
+                add(PaperMode.TSC_4030)
+                add(PaperMode.TSC_4060)
+                add(PaperMode.TSC_4080)
+                add(PaperMode.TSC_6040)
+                add(PaperMode.TSC_6080)
+                add(PaperMode.NONE)
             }
-            else -> emptyList<PaperMode>()
         }
-
 
         Dialog(onDismissRequest = { showPaperModeDialog = false }) {
             PaperSizeDialog(
