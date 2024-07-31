@@ -23,7 +23,7 @@ class LabelProvide(
 ):BaseProvide(bitMapOption){
     private var tscBitmapArray: ByteArray? = null
 
-    fun getTscBitmapArray(): ByteArray {
+    fun getData(): ByteArray {
         if (tscBitmapArray == null) {
             tscBitmapArray = start()
         }
@@ -105,7 +105,7 @@ class LabelProvide(
 
         add(
             TextParam(
-                text = "产品标准：GB/T22-21"
+                text = "产品标准：GB/T22-21894576"
             ).apply {
                 size = 26f
             }

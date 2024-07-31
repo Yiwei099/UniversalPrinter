@@ -6,6 +6,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.eiviayw.library.draw.BitmapOption
+import com.eiviayw.library.util.BitmapUtils
 import com.eiviayw.print.base.BasePrinter
 import com.eiviayw.print.bean.mission.GraphicMission
 import com.eiviayw.print.gprinter.EscBtGPrinter
@@ -22,6 +23,7 @@ import com.eiviayw.universalprinter.bean.PaperMode
 import com.eiviayw.universalprinter.bean.PrinterMode
 import com.eiviayw.universalprinter.bean.SDKMode
 import com.eiviayw.universalprinter.provide.EscDataProvide
+import com.eiviayw.universalprinter.provide.LabelProvide
 import com.gprinter.utils.Command
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -372,9 +374,9 @@ class MainViewMode : ViewModel() {
      * 开始打印
      */
     fun startPrint(printer:BasePrinter,isEsc:Boolean,times:Int = 1, startIndex:String, topIndex:String, paperSize: PaperMode, buildMode:BuildMode){
-        var data:ByteArray? = null
-        if (isEsc){
-            val bitmapOption = when (paperSize) {
+        val bitmapOption:BitmapOption
+        val data = if (isEsc){
+            bitmapOption = when (paperSize) {
                 PaperMode.ESC_58 -> {
                     BitmapOption(maxWidth = 384)
                 }
@@ -385,20 +387,55 @@ class MainViewMode : ViewModel() {
                     BitmapOption()
                 }
             }
-            data = EscDataProvide(bitmapOption).getData()
+            EscDataProvide(bitmapOption).getData()
+        }else{
+            bitmapOption = when (paperSize) {
+                PaperMode.TSC_3020 -> BitmapOption(maxWidth = 240, maxHeight = 160)
+                PaperMode.TSC_4060 -> BitmapOption(maxWidth = 320, maxHeight = 480)
+                PaperMode.TSC_4080 -> BitmapOption(maxWidth = 320, maxHeight = 640)
+                PaperMode.TSC_6040 -> BitmapOption(maxWidth = 480, maxHeight = 320)
+                PaperMode.TSC_6080 -> BitmapOption(maxWidth = 480, maxHeight = 640)
+                else -> BitmapOption(maxWidth = 320, maxHeight = 240)
+            }
+            LabelProvide(bitmapOption).getData()
         }
-
-        data?.let {
-            printer.addMission(GraphicMission(data).apply {
+        /*BitmapUtils.getInstance().byteDataToBitmap(data)?.let {
+            val bytes =
+                com.eiviayw.universalprinter.util.BitmapUtils.getInstance().bitmapToBytes(it)
+            printer.addMission(GraphicMission(bytes.toByteArray()).apply {
                 count = times
+                if (!isEsc){
+                    bitmapWidth = bitmapOption.maxWidth
+                    bitmapHeight = bitmapOption.maxHeight
+                }
             })
-        }
+        }*/
+
+        printer.addMission(GraphicMission(data).apply {
+            count = times
+            countByOne = false
+            if (!isEsc){
+                //佳博标签传值单位是 mm 必须除以8
+                bitmapWidth = bitmapOption.maxWidth / 8
+                bitmapHeight = bitmapOption.maxHeight / 8
+
+            }
+        })
+
     }
 
+    /**
+     * 销毁缓存打印机
+     * @param printer 打印机
+     */
     fun onDestroyPrinter(printer:BasePrinter){
         printer.onDestroy()
     }
 
+    /**
+     * 删除缓存打印机
+     * @param printer 打印机
+     */
     fun deletePrinter(printer: BasePrinter){
         printer.onDestroy()
         val iterator = _printerList.value.iterator()
