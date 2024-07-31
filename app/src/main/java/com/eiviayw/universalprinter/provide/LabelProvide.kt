@@ -3,8 +3,6 @@ package com.eiviayw.universalprinter.provide
 import android.graphics.Typeface
 import com.eiviayw.library.Constant
 import com.eiviayw.library.bean.param.BaseParam
-import com.eiviayw.library.bean.param.LineDashedParam
-import com.eiviayw.library.bean.param.MultiElementParam
 import com.eiviayw.library.bean.param.TextParam
 import com.eiviayw.library.draw.BitmapOption
 import com.eiviayw.library.provide.BaseProvide
@@ -20,18 +18,9 @@ import com.eiviayw.library.provide.BaseProvide
  * 标签数据提供者
  */
 
-class LabelProvide private constructor() : BaseProvide(BitmapOption(maxWidth = 320, maxHeight = 240, gravity = Constant.Companion.Gravity.CENTER, followEffectItem = true)) {
-    companion object {
-        @Volatile
-        private var instance: LabelProvide? = null
-
-        @JvmStatic
-        fun getInstance() =
-            instance ?: synchronized(this) {
-                instance ?: LabelProvide().also { instance = it }
-            }
-    }
-
+class LabelProvide(
+    bitMapOption:BitmapOption,
+):BaseProvide(bitMapOption){
     private var tscBitmapArray: ByteArray? = null
 
     fun getTscBitmapArray(): ByteArray {
@@ -42,71 +31,11 @@ class LabelProvide private constructor() : BaseProvide(BitmapOption(maxWidth = 3
     }
 
     private fun start(): ByteArray {
-        val params = covertYDTDrawParam()
+        val params = covertDrawParam()
         return startDraw(params)
     }
 
-    private fun convertDrawParam() = mutableListOf<BaseParam>().apply {
-        add(
-            MultiElementParam(
-                param1 = TextParam(
-                    text = "#Swan-1",
-                    weight = 0.6,
-                ),
-                param2 = TextParam(
-                    text = "Dine in:1/1",
-                    weight = 0.4
-                ).apply {
-                    align = Constant.Companion.Align.ALIGN_END
-                }
-            ).apply {
-                perLineSpace = -10
-            }
-        )
-
-        add(LineDashedParam().apply {
-            perLineSpace = 30
-            typeface = Typeface.DEFAULT_BOLD
-        })
-
-        add(
-            TextParam(
-                text = "Swisse Vitamin c Manukau Honey"
-            ).apply {
-                size = 30f
-                typeface = Typeface.DEFAULT_BOLD
-            }
-        )
-
-        add(
-            TextParam(
-                text = "去冰，少甜，抹茶底，+芋泥",
-            ).apply {
-                perLineSpace = -10
-            }
-        )
-
-        add(LineDashedParam().apply {
-            perLineSpace = 30
-            typeface = Typeface.DEFAULT_BOLD
-        })
-
-        add(
-            MultiElementParam(
-                param1 = TextParam(
-                    text = "2023-12-02 17:20",
-                    weight = 0.7,
-                ),
-                param2 = TextParam(
-                    text = "18.80",
-                    weight = 0.3,
-                    align = Constant.Companion.Align.ALIGN_END
-                )
-            )
-        )
-    }
-
-    private fun covertYDTDrawParam() = mutableListOf<BaseParam>().apply {
+    private fun covertDrawParam() = mutableListOf<BaseParam>().apply {
         add(
             TextParam(
                 text = "李宁"
@@ -144,7 +73,7 @@ class LabelProvide private constructor() : BaseProvide(BitmapOption(maxWidth = 3
 
         add(
             TextParam(
-                text = "零售价：100"
+                text = "零售价：￥100"
             ).apply {
                 size = 26f
             }
@@ -152,7 +81,7 @@ class LabelProvide private constructor() : BaseProvide(BitmapOption(maxWidth = 3
 
         add(
             TextParam(
-                text = "折后价：100"
+                text = "折后价：￥90"
             ).apply {
                 size = 26f
             }

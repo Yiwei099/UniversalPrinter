@@ -52,8 +52,8 @@ fun ConnectModeDialog(
     ItemOptionList(
         data = connectModeList,
         modifier = modifier,
-        getItemName = { it.name },
-        getChooseState = { it.label == chooseMode.label },
+        getItemName = { it.label },
+        getChooseState = { it.value == chooseMode.value },
         onItemClick = {
             chooseMode = it
         },

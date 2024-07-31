@@ -118,61 +118,79 @@ fun StartPrintView(
             showBuildModeDialog = true
         }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(0.dp, 10.dp),
-            horizontalArrangement = Arrangement.End
-        ) {
-            ComButton(
-                modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
-                value = "返回",
-                containerColor = ColorE9E9E9,
-                click = {
-                    viewMode.openStartPrintView(null)
-                }
-            )
-
-            ComButton(
-                modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
-                value = "删除",
-                containerColor = ColorFF3434,
-                click = {
-                    choosePrinter.value?.let {
-                        viewMode.deletePrinter(it)
+        Column {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 10.dp),
+                horizontalArrangement = Arrangement.End
+            ) {
+                ComButton(
+                    modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
+                    value = "删除",
+                    containerColor = ColorFF3434,
+                    click = {
+                        choosePrinter.value?.let {
+                            viewMode.deletePrinter(it)
+                        }
                     }
-                }
-            )
+                )
 
-            ComButton(
-                modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
-                value = "编辑",
-                containerColor = Color177FF,
-                click = {
-                    choosePrinter.value?.let {
-                        viewMode.modifyPrinter(it)
+                ComButton(
+                    modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
+                    value = "编辑",
+                    containerColor = Color177FF,
+                    click = {
+                        choosePrinter.value?.let {
+                            viewMode.modifyPrinter(it)
+                        }
                     }
-                }
-            )
+                )
+            }
 
-            ComButton(
-                modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
-                value = "缓存销毁",
-                containerColor = OrangeFF870D,
-                click = {
-                    choosePrinter.value?.let {
-                        viewMode.onDestroyPrinter(it)
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 10.dp),
+                horizontalArrangement = Arrangement.End
+            ) {
+                ComButton(
+                    modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
+                    value = "缓存销毁",
+                    containerColor = OrangeFF870D,
+                    click = {
+                        choosePrinter.value?.let {
+                            viewMode.onDestroyPrinter(it)
+                        }
                     }
-                }
-            )
+                )
 
-            ComButton(
-                value = "打印($printTime)",
-                click = { choosePrinter.value?.let {
-                    viewMode.startPrint(it,isEscPrinter,printTime.toInt(),startIndex,topIndex,paperSize,buildMode)
-                } }
-            )
+                ComButton(
+                    modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
+                    value = "打印($printTime)",
+                    click = { choosePrinter.value?.let {
+                        viewMode.startPrint(it,isEscPrinter,printTime.toInt(),startIndex,topIndex,paperSize,buildMode)
+                    } }
+                )
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 10.dp),
+                horizontalArrangement = Arrangement.End
+            ) {
+                ComButton(
+                    modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
+                    value = "返回",
+                    containerColor = ColorE9E9E9,
+                    click = {
+                        viewMode.openStartPrintView(null)
+                    }
+                )
+            }
         }
+
     }
 
     if (showPaperModeDialog){

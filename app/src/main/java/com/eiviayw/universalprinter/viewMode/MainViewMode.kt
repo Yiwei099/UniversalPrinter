@@ -2,12 +2,10 @@ package com.eiviayw.universalprinter.viewMode
 
 import android.bluetooth.BluetoothDevice
 import android.hardware.usb.UsbDevice
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.eiviayw.library.draw.BitmapOption
-import com.eiviayw.library.provide.BaseProvide
 import com.eiviayw.print.base.BasePrinter
 import com.eiviayw.print.bean.mission.GraphicMission
 import com.eiviayw.print.gprinter.EscBtGPrinter
@@ -24,8 +22,6 @@ import com.eiviayw.universalprinter.bean.PaperMode
 import com.eiviayw.universalprinter.bean.PrinterMode
 import com.eiviayw.universalprinter.bean.SDKMode
 import com.eiviayw.universalprinter.provide.EscDataProvide
-import com.eiviayw.universalprinter.provide.LabelProvide
-import com.eiviayw.universalprinter.provide.PrintDataProvide
 import com.gprinter.utils.Command
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
