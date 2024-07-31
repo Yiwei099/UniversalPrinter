@@ -27,19 +27,25 @@ import com.eiviayw.print.gprinter.EscBtGPrinter
 import com.eiviayw.print.gprinter.EscUsbGPrinter
 import com.eiviayw.print.gprinter.TscBtGPrinter
 import com.eiviayw.print.gprinter.TscUsbGPrinter
+import com.eiviayw.print.native.NativeUsbPrinter
 import com.eiviayw.universalprinter.bean.BuildMode
 import com.eiviayw.universalprinter.bean.PaperMode
 import com.eiviayw.universalprinter.dialog.BuildModeDialog
 import com.eiviayw.universalprinter.dialog.PaperSizeDialog
+import com.eiviayw.universalprinter.ui.theme.Color177FF
 import com.eiviayw.universalprinter.ui.theme.ColorE9E9E9
+import com.eiviayw.universalprinter.ui.theme.ColorFF3434
+import com.eiviayw.universalprinter.ui.theme.OrangeFF870D
 import com.eiviayw.universalprinter.viewMode.MainViewMode
 import com.eiviayw.universalprinter.views.ComButton
 import com.eiviayw.universalprinter.views.StepOption
+import com.gprinter.utils.Command
 
 @Composable
 fun StartPrintView(
     modifier: Modifier = Modifier,
-    viewMode: MainViewMode
+    viewMode: MainViewMode,
+    name:String=""
 ) {
 
     val choosePrinter = viewMode.choosePrinter.observeAsState()
@@ -47,6 +53,7 @@ fun StartPrintView(
     val isEscPrinter = when(choosePrinter.value){
         is EscBtGPrinter, is EscUsbGPrinter -> true
         is TscBtGPrinter,is TscUsbGPrinter -> false
+        is NativeUsbPrinter -> (choosePrinter.value as NativeUsbPrinter).getCommandTypeValue() == Command.ESC
         else -> false
     }
 
@@ -60,7 +67,9 @@ fun StartPrintView(
 
 
     Column(modifier = modifier.padding(0.dp, 0.dp, 20.dp, 0.dp)) {
+        Text(text = name)
         OutlinedTextField(
+            modifier = Modifier.padding(0.dp,20.dp),
             value = printTime,
             onValueChange = { printTime = it },
             label = { Text(text = "打印份数") },
@@ -69,24 +78,26 @@ fun StartPrintView(
             ),
         )
 
-        OutlinedTextField(
-            value = startIndex,
-            onValueChange = { startIndex = it },
-            label = { Text(text = "左侧起始位置") },
-            modifier = Modifier.padding(0.dp,20.dp),
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-            ),
-        )
+        if (!isEscPrinter){
+            OutlinedTextField(
+                value = startIndex,
+                onValueChange = { startIndex = it },
+                label = { Text(text = "左侧起始位置") },
+                modifier = Modifier.padding(0.dp,20.dp),
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                ),
+            )
 
-        OutlinedTextField(
-            value = topIndex,
-            onValueChange = { topIndex = it },
-            label = { Text(text = "顶部起始位置") },
-            keyboardOptions = KeyboardOptions(
-                keyboardType = KeyboardType.Number,
-            ),
-        )
+            OutlinedTextField(
+                value = topIndex,
+                onValueChange = { topIndex = it },
+                label = { Text(text = "顶部起始位置") },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Number,
+                ),
+            )
+        }
 
         StepOption(
             Modifier.padding(0.dp, 10.dp),
@@ -123,8 +134,30 @@ fun StartPrintView(
 
             ComButton(
                 modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
+                value = "删除",
+                containerColor = ColorFF3434,
+                click = {
+                    choosePrinter.value?.let {
+                        viewMode.deletePrinter(it)
+                    }
+                }
+            )
+
+            ComButton(
+                modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
+                value = "编辑",
+                containerColor = Color177FF,
+                click = {
+                    choosePrinter.value?.let {
+                        viewMode.modifyPrinter(it)
+                    }
+                }
+            )
+
+            ComButton(
+                modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
                 value = "缓存销毁",
-                containerColor = ColorE9E9E9,
+                containerColor = OrangeFF870D,
                 click = {
                     choosePrinter.value?.let {
                         viewMode.onDestroyPrinter(it)

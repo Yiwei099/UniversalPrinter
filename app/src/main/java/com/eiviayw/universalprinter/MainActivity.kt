@@ -33,6 +33,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.ViewModelProvider
 import com.eiviayw.print.base.BasePrinter
+import com.eiviayw.print.eprinter.EpsonPrinter
+import com.eiviayw.print.gprinter.EscBtGPrinter
+import com.eiviayw.print.gprinter.EscNetGPrinter
+import com.eiviayw.print.gprinter.EscUsbGPrinter
+import com.eiviayw.print.gprinter.TscBtGPrinter
+import com.eiviayw.print.gprinter.TscNetGPrinter
+import com.eiviayw.print.gprinter.TscUsbGPrinter
 import com.eiviayw.universalprinter.bean.ConnectMode
 import com.eiviayw.universalprinter.dialog.ConnectModeDialog
 import com.eiviayw.universalprinter.ui.theme.UniversalPrinterTheme
@@ -199,12 +206,14 @@ fun Body(
     val createState: State<Boolean> = viewMode.openCreatePrinterView.observeAsState(false)
     val startPrintState = viewMode.choosePrinter.observeAsState()
     val printerList = viewMode.printerList.collectAsState(initial = emptyList())
+    var choosePrinterName by remember { mutableStateOf("") }
 
     Column {
         ComTopBar(
             title = "打印助手",
             actionTitle = if (createState.value) "返回" else "创建",
             onActionClick = {
+                choosePrinterName = ""
                 viewMode.openStartPrintView(null)
                 if (createState.value) {
                     viewMode.closeCreatePrinterView()
@@ -214,8 +223,9 @@ fun Body(
             }
         )
         Row {
-            PrinterListView(modifier = Modifier.weight(3f), viewMode) {
+            PrinterListView(modifier = Modifier.weight(3f), viewMode) {it,name->
                 viewMode.openStartPrintView(it)
+                choosePrinterName = name
             }
             if (printerList.value.isNotEmpty() || createState.value) {
                 if (createState.value) {
@@ -226,7 +236,7 @@ fun Body(
                     )
                 } else if (startPrintState.value != null) {
                     ComVerticalLine()
-                    StartPrintView(modifier = Modifier.weight(7f), viewMode)
+                    StartPrintView(modifier = Modifier.weight(7f), viewMode,choosePrinterName)
                 }
             } else {
                 EmptyView(tips = "点击右上角【创建】打印机开始体验吧~~")
@@ -241,9 +251,9 @@ fun Body(
 fun PrinterListView(
     modifier: Modifier = Modifier,
     viewMode: MainViewMode = MainViewMode(),
-    printerItemClick: (BasePrinter) -> Unit = {}
+    printerItemClick: (BasePrinter,String) -> Unit
 ) {
-    val printerList = viewMode.printerList.collectAsState(initial = emptyList())
+    val printerList = viewMode.printerList.collectAsState(initial = mutableListOf())
     Column(
         modifier
     ) {
@@ -251,11 +261,21 @@ fun PrinterListView(
             Log.d("MainActivity", "PrinterListView: printerList isEmpty")
             EmptyView(tips = "尚未添加打印机")
         } else {
-            for (index in 0 until printerList.value.size) {
+            printerList.value.forEach {
+                val name = when(it){
+                    is EscUsbGPrinter -> "佳博USB打印机"
+                    is EscBtGPrinter -> "佳博蓝牙打印机"
+                    is EscNetGPrinter -> "佳博局域网打印机"
+                    is EpsonPrinter -> "Epson打印机"
+                    is TscBtGPrinter -> "佳博蓝牙打印机 - 标签"
+                    is TscUsbGPrinter -> "佳博USB打印机 - 标签"
+                    is TscNetGPrinter -> "佳博局域网打印机 - 标签"
+                    else -> "原生USB打印机"
+                }
                 ComItemOption(
-                    title = "打印机$index",
+                    title = name,
                     value = "",
-                    onClick = { printerItemClick.invoke(printerList.value[index]) }
+                    onClick = { printerItemClick.invoke(it,name) }
                 )
             }
         }

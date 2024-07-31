@@ -14,6 +14,7 @@ import com.eiviayw.print.gprinter.EscBtGPrinter
 import com.eiviayw.print.gprinter.EscUsbGPrinter
 import com.eiviayw.print.gprinter.TscBtGPrinter
 import com.eiviayw.print.gprinter.TscUsbGPrinter
+import com.eiviayw.print.native.NativeUsbPrinter
 import com.eiviayw.universalprinter.BaseApplication
 import com.eiviayw.universalprinter.bean.BuildMode
 import com.eiviayw.universalprinter.bean.ConnectMode
@@ -23,6 +24,7 @@ import com.eiviayw.universalprinter.bean.SDKMode
 import com.eiviayw.universalprinter.provide.EscDataProvide
 import com.eiviayw.universalprinter.provide.LabelProvide
 import com.eiviayw.universalprinter.provide.PrintDataProvide
+import com.gprinter.utils.Command
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -87,11 +89,14 @@ class MainViewMode : ViewModel() {
     //</editor-fold desc="蓝牙相关">
 
     //打印机列表
-    private val _printerList = MutableStateFlow<List<BasePrinter>>(mutableListOf())
+    private val _printerList = MutableStateFlow<MutableList<BasePrinter>>(mutableListOf())
     val printerList = _printerList.asStateFlow()
 
     private val _choosePrinter = MutableLiveData<BasePrinter?>(null)
     var choosePrinter:LiveData<BasePrinter?> = _choosePrinter
+
+    private val _isModifyPrinter = MutableLiveData(false)
+    var isModifyPrinter: LiveData<Boolean> = _isModifyPrinter
 
     //<editor-fold desc="视图控制">
     fun openStartPrintView(printer: BasePrinter?) {
@@ -265,6 +270,11 @@ class MainViewMode : ViewModel() {
      * 保存参数创建打印机
      */
     fun createPrinter() {
+        if (_isModifyPrinter.value == true){
+            _choosePrinter.value?.let { deletePrinter(it) }
+            openStartPrintView(null)
+        }
+
         when (connectMode.value) {
             ConnectMode.BLE -> {
                 choseBlePrinter.value?.let { createBlePrinter(it) }
@@ -293,8 +303,10 @@ class MainViewMode : ViewModel() {
             PrinterMode.ESC -> EscBtGPrinter(BaseApplication.getInstance(), device.address)
             else -> null
         }?.let {
-            _printerList.value += listOf(it)
-            _choseBlePrinter.value = null
+            _printerList.value = mutableListOf<BasePrinter>().apply {
+                addAll(_printerList.value)
+                add(it)
+            }
             closeCreatePrinterView()
             reSetParam()
         }
@@ -314,17 +326,27 @@ class MainViewMode : ViewModel() {
             }
 
             PrinterMode.ESC -> {
-                EscUsbGPrinter(
-                    BaseApplication.getInstance(),
-                    usbDevice.vendorId,
-                    usbDevice.productId
-                )
+                when(sdkMode.value){
+                    SDKMode.NativeUsb -> {
+                        NativeUsbPrinter(BaseApplication.getInstance(),usbDevice,Command.ESC)
+                    }
+                    else -> {
+                        EscUsbGPrinter(
+                            BaseApplication.getInstance(),
+                            usbDevice.vendorId,
+                            usbDevice.productId
+                        )
+                    }
+                }
+
             }
 
             else -> null
         }?.let {
-            _printerList.value += listOf(it)
-            _choseUSBPrinter.value = null
+            _printerList.value = mutableListOf<BasePrinter>().apply {
+                addAll(_printerList.value)
+                add(it)
+            }
             closeCreatePrinterView()
             reSetParam()
         }
@@ -338,6 +360,8 @@ class MainViewMode : ViewModel() {
         _printerMode.value = PrinterMode.NONE
         _sdkMode.value = SDKMode.NONE
         _choseUSBPrinter.value = null
+        _choseBlePrinter.value = null
+        _isModifyPrinter.value = false
     }
 
     /**
@@ -361,17 +385,47 @@ class MainViewMode : ViewModel() {
         }
 
         data?.let {
-            for (index in 0 until times) {
-                printer.addMission(GraphicMission(data).apply {
-                    id = "${index.plus(1)}/$times"
-                    count = times
-                    this.index = index
-                })
-            }
+            printer.addMission(GraphicMission(data).apply {
+                count = times
+            })
         }
     }
 
     fun onDestroyPrinter(printer:BasePrinter){
         printer.onDestroy()
+    }
+
+    fun deletePrinter(printer: BasePrinter){
+        printer.onDestroy()
+        val iterator = _printerList.value.iterator()
+        while(iterator.hasNext()){
+            if (iterator.next() == printer){
+                iterator.remove()
+                openStartPrintView(null)
+            }
+        }
+    }
+
+    fun modifyPrinter(printer: BasePrinter){
+        _isModifyPrinter.value = true
+        //打开视图
+        openCreatePrinterView()
+        when(printer){
+            is EscBtGPrinter -> {
+                _connectMode.value = ConnectMode.BLE
+                _printerMode.value = PrinterMode.ESC
+                _sdkMode.value = SDKMode.GPrinter
+            }
+            is EscUsbGPrinter -> {
+                _connectMode.value = ConnectMode.USB
+                _printerMode.value = PrinterMode.ESC
+                _sdkMode.value = SDKMode.GPrinter
+            }
+            is NativeUsbPrinter -> {
+                _connectMode.value = ConnectMode.USB
+                _printerMode.value = PrinterMode.ESC
+                _sdkMode.value = SDKMode.NativeUsb
+            }
+        }
     }
 }

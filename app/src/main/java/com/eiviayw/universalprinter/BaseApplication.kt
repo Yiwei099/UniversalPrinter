@@ -15,4 +15,9 @@ class BaseApplication : Application() {
 
         private const val TAG = "BaseApplication"
     }
+
+    override fun onCreate() {
+        super.onCreate()
+        instance = this
+    }
 }
