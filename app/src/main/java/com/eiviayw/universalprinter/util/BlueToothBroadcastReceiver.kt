@@ -9,39 +9,32 @@ import android.os.Build
 import android.util.Log
 import com.eiviayw.universalprinter.BaseApplication
 
-class BlueToothBroadcastReceiver (private val context: Context): BroadcastReceiver() {
+class BlueToothBroadcastReceiver(
+    private var listener: ((BluetoothDevice) -> Unit)
+) : BroadcastReceiver() {
 
-    private var listener:((BluetoothDevice) -> Unit)? = null
-
-    override fun onReceive(context: Context?, intent: Intent?) {
-        intent?.run {
-            when(action){
-                BluetoothDevice.ACTION_FOUND->{
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        getParcelableExtra(BluetoothDevice.EXTRA_DEVICE,BluetoothDevice::class.java)
-                    } else {
-                        getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
-                    }?.let {
-                        listener?.invoke(it)
-                    }
+    override fun onReceive(context: Context, intent: Intent) {
+        when(intent.action){
+            BluetoothDevice.ACTION_FOUND->{
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                    intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE,BluetoothDevice::class.java)
+                } else {
+                    intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE)
+                }?.let {
+                    listener.invoke(it)
                 }
-                else->{}
             }
+            else->{}
         }
     }
 
-    fun removeListener(){
-        this.listener = null
-    }
-    fun setOnBleToothBroadcastListener(listener:(BluetoothDevice) -> Unit){
-        this.listener = listener
-    }
-
     fun onReceive() {
-        context.registerReceiver(this, IntentFilter(BluetoothDevice.ACTION_FOUND))
+        Log.d(BaseApplication.TAG, "BlueToothBroadcastReceiver onReceive")
+        BaseApplication.getInstance().registerReceiver(this, IntentFilter(BluetoothDevice.ACTION_FOUND))
     }
 
     fun onDestroy(){
-        context.unregisterReceiver(this)
+        Log.d(BaseApplication.TAG, "BlueToothBroadcastReceiver onDestroy")
+        BaseApplication.getInstance().unregisterReceiver(this)
     }
 }

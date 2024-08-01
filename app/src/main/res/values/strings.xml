@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">PrinterKeeper</string>
+    <string name="cancel">返回</string>
+    <string name="create">创建</string>
+    <string name="empty_printer_list_tips">点击右上角【创建】打印机开始体验吧~~</string>
+    <string name="empty_printer_list_tips_1">尚未添加打印机</string>
 </resources>

@@ -1,7 +1,14 @@
 package com.eiviayw.universalprinter.dialog
 
 import android.bluetooth.BluetoothDevice
+import android.bluetooth.BluetoothManager
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.hardware.usb.UsbDevice
+import android.hardware.usb.UsbManager
+import android.os.Build
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +22,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -24,13 +32,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.eiviayw.universalprinter.BaseApplication
 import com.eiviayw.universalprinter.constant.BuildMode
 import com.eiviayw.universalprinter.constant.ConnectMode
 import com.eiviayw.universalprinter.constant.PaperMode
 import com.eiviayw.universalprinter.constant.PrinterMode
 import com.eiviayw.universalprinter.constant.SDKMode
 import com.eiviayw.universalprinter.ui.theme.ColorE9E9E9
+import com.eiviayw.universalprinter.util.BlueToothBroadcastReceiver
+import com.eiviayw.universalprinter.util.BlueToothHelper
+import com.eiviayw.universalprinter.util.UsbBroadcastReceiver
 import com.eiviayw.universalprinter.viewMode.MainViewMode
+import com.eiviayw.universalprinter.viewMode.MyViewModel
 import com.eiviayw.universalprinter.views.ChoseOption
 import com.eiviayw.universalprinter.views.ComButton
 
@@ -121,39 +134,67 @@ fun SDKModeDialog(
 }
 
 @Composable
-fun UsbPrinterDialog(
-    modifier: Modifier,
-    devicesList:List<UsbDevice>,
-    cancel: () -> Unit = {},
-    confirm: (UsbDevice) -> Unit = {}
-){
-    var chooseDevice by remember { mutableStateOf(devicesList.firstOrNull()) }
-    ItemOptionList(
-        data = devicesList,
-        modifier = modifier,
-        getItemName = { it.manufacturerName ?: "" },
-        getChooseState = { chooseDevice?.deviceName == it.deviceName },
-        onItemClick = {
-            chooseDevice = it
-        },
-        cancel = cancel,
-        confirm = {
-            chooseDevice?.let { confirm.invoke(it) }
+fun USBDeviceListener(viewModel: MyViewModel = androidx.lifecycle.viewmodel.compose.viewModel()) {
+    val usbManager = BaseApplication.getInstance().getSystemService(Context.USB_SERVICE) as UsbManager
+
+    // 记住 USB 监听器，以便稍后取消注册
+    val usbReceiver = remember(usbManager) {
+        UsbBroadcastReceiver().apply {
+            setOnUsbReceiveListener(object : UsbBroadcastReceiver.OnUsbReceiveListener{
+                override fun onUsbAttached(intent: Intent) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        intent.getParcelableExtra(UsbManager.EXTRA_DEVICE,UsbDevice::class.java)
+                    }else{
+                        intent.getParcelableExtra(UsbManager.EXTRA_DEVICE)
+                    }?.let {
+                        viewModel.addUsbDevice(it)
+                    }
+                }
+
+                override fun onUsbDetached(intent: Intent) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        intent.getParcelableExtra(UsbManager.EXTRA_DEVICE,UsbDevice::class.java)
+                    }else{
+                        intent.getParcelableExtra(UsbManager.EXTRA_DEVICE)
+                    }?.let { viewModel.removeUsbDevice(it) }
+                }
+
+                override fun onUsbPermission(intent: Intent) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                        intent.getParcelableExtra(UsbManager.EXTRA_DEVICE,UsbDevice::class.java)
+                    }else{
+                        intent.getParcelableExtra(UsbManager.EXTRA_DEVICE)
+                    }?.let { viewModel.addUsbDevice(it) }
+                }
+            })
         }
-    )
+    }
+
+    DisposableEffect(usbManager) {
+        // 注册 USB 监听器
+        usbReceiver.onRegister()
+
+        viewModel.setUsbDevices(usbReceiver.getUsbDevices())
+
+        onDispose {
+            // 组件销毁时，取消注册 USB 监听器
+            usbReceiver.onDestroy()
+        }
+    }
 }
 
 @Composable
-fun BleToothPrinterDialog(
+fun UsbPrinterDialogV1(
     modifier: Modifier,
-    viewMode: MainViewMode,
-    defaultChooseDevice: BluetoothDevice?,
+    viewModel: MyViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    defaultDevice: UsbDevice? = null,
     cancel: () -> Unit = {},
-    confirm: (BluetoothDevice) -> Unit = {}
+    confirm: (UsbDevice?) -> Unit = {}
 ){
-    var chooseDevice by remember { mutableStateOf(defaultChooseDevice) }
+    USBDeviceListener()
 
-    val dataState = viewMode.bleDevicesSet.collectAsState(initial = emptySet())
+    var chooseDevice by remember { mutableStateOf(defaultDevice) }
+    val devicesList = viewModel.usbDevicesList.collectAsState(initial = emptySet()).value
 
     Surface(
         modifier = modifier.wrapContentHeight(),
@@ -164,7 +205,7 @@ fun BleToothPrinterDialog(
             modifier = Modifier.padding(10.dp, 0.dp)
         ) {
             Text(
-                text = "选择蓝牙设备",
+                text = "选择USB设备",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(0.dp, 6.dp),
@@ -175,12 +216,12 @@ fun BleToothPrinterDialog(
                 modifier = Modifier.height(500.dp)
             ) {
                 items(
-                    dataState.value.toList(),
+                    devicesList.toList(),
                 ) { item ->
                     //对条目布局使用该修饰符来对列表的更改添加动画效果
                     ChoseOption(
-                        title = "${item.name}-${item.address}" ?: "" ,
-                        chooseState = item.address == chooseDevice?.address,
+                        title = item.manufacturerName ?: "" ,
+                        chooseState = item.deviceName == chooseDevice?.deviceName,
                         click = {
                             chooseDevice = item
                         }
@@ -202,9 +243,98 @@ fun BleToothPrinterDialog(
                 ComButton(
                     value = "确定",
                     click = {
-                        chooseDevice?.let{
-                            confirm.invoke(it)
+                        confirm.invoke(chooseDevice)
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun BleToothListener(viewModel: MyViewModel = androidx.lifecycle.viewmodel.compose.viewModel()){
+    val bleToothManager = BaseApplication.getInstance().getSystemService(Context.BLUETOOTH_SERVICE) as BluetoothManager
+
+    val bleToothReceiver = remember(bleToothManager){
+        BlueToothBroadcastReceiver{ viewModel.addBleDevice(it) }
+    }
+
+    DisposableEffect(bleToothManager) {
+        // 注册 蓝牙 监听器
+        bleToothReceiver.onReceive()
+        //扫描设备
+        BlueToothHelper.getInstance().discoveryBleDevice()
+
+        onDispose {
+            // 组件销毁时，取消注册 蓝牙 监听器
+            bleToothReceiver.onDestroy()
+            // 停止扫描
+            BlueToothHelper.getInstance().stopDiscovery()
+        }
+    }
+}
+
+@Composable
+fun BleToothPrinterDialogV1(
+    modifier: Modifier,
+    viewModel: MyViewModel = androidx.lifecycle.viewmodel.compose.viewModel(),
+    defaultChooseAddress:String = "",
+    cancel: () -> Unit = {},
+    confirm: (String) -> Unit = {}
+){
+    BleToothListener()
+
+    var address by remember { mutableStateOf(defaultChooseAddress) }
+    val dataState = viewModel.bleDevicesSet.collectAsState(initial = emptySet()).value
+
+    Surface(
+        modifier = modifier.wrapContentHeight(),
+        color = Color.White,
+        shape = MaterialTheme.shapes.small
+    ) {
+        Column(
+            modifier = Modifier.padding(10.dp, 0.dp)
+        ) {
+            Text(
+                text = "选择蓝牙设备",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 6.dp),
+                textAlign = TextAlign.Center
+            )
+
+            LazyColumn(
+                modifier = Modifier.height(500.dp)
+            ) {
+                items(
+                    dataState.toList(),
+                ) { item ->
+                    //对条目布局使用该修饰符来对列表的更改添加动画效果
+                    ChoseOption(
+                        title = "${item.name}-${item.address}" ?: "" ,
+                        chooseState = item.address == address,
+                        click = {
+                            address = item.address
                         }
+                    )
+                }
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 10.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                ComButton(
+                    value = "取消",
+                    containerColor = ColorE9E9E9,
+                    click = cancel
+                )
+                ComButton(
+                    value = "确定",
+                    click = {
+                        confirm.invoke(address)
                     }
                 )
             }

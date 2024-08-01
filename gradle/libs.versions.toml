@@ -11,6 +11,10 @@ composeBom = "2023.08.00"
 liveData = "1.4.0"
 printSupport = "1.2.2"
 drawingSupport = "1.1.1"
+composeViewModel = "2.6.1"
+coroutinesCore = "1.8.0"
+coroutinesAndroid = "1.8.0"
+coroutinesFlow = "1.8.0"
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -30,6 +34,10 @@ androidx-material3 = { group = "androidx.compose.material3", name = "material3" 
 runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "liveData"}
 printSupport = { group = "com.github.Yiwei099", name="PrintSupport", version.ref = "printSupport" }
 drawingSupport = { group = "com.github.Yiwei099", name="DrawingSupport", version.ref = "drawingSupport" }
+viewModelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "composeViewModel" }
+kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutinesAndroid"}
+kotlinx-coroutines-flow = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-flow", version.ref = "coroutinesFlow"}
+kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutinesCore"}
 
 
 [plugins]

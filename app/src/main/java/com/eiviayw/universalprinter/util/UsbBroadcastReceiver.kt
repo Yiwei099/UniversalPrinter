@@ -9,6 +9,7 @@ import android.hardware.usb.UsbConstants
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import android.util.Log
+import com.eiviayw.universalprinter.BaseApplication
 
 /**
  * Created with Android Studio.
@@ -17,9 +18,9 @@ import android.util.Log
  * @Version Copyright (c) 2023, Android Engineer YYW All Rights Reserved.
  * description : 通用USB广播管理
  */
-class UsbBroadcastReceiver(private val context: Context): BroadcastReceiver() {
+class UsbBroadcastReceiver: BroadcastReceiver() {
 
-    private val usbManager by lazy { context.getSystemService(Context.USB_SERVICE) as UsbManager }
+    private val usbManager by lazy { BaseApplication.getInstance().getSystemService(Context.USB_SERVICE) as UsbManager }
 
     private var onUsbReceiveListener: OnUsbReceiveListener? = null
 
@@ -61,7 +62,7 @@ class UsbBroadcastReceiver(private val context: Context): BroadcastReceiver() {
     private fun requestPermission(device: UsbDevice) {
         val mPermissionIntent =
             PendingIntent.getBroadcast(
-                context,
+                BaseApplication.getInstance(),
                 REQUEST_CODE_USB_PERMISSION,
                 Intent(ACTION_USB_PERMISSION),
                 PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_UPDATE_CURRENT
@@ -83,17 +84,17 @@ class UsbBroadcastReceiver(private val context: Context): BroadcastReceiver() {
     }
 
     fun onRegister(){
-        context.registerReceiver(this, IntentFilter(ACTION_USB_PERMISSION).apply {
+        BaseApplication.getInstance().registerReceiver(this, IntentFilter(ACTION_USB_PERMISSION).apply {
             addAction(UsbManager.ACTION_USB_DEVICE_ATTACHED)
             addAction(UsbManager.ACTION_USB_DEVICE_DETACHED)
         })
-        Log.d(TAG, "USB广播被注册啦")
+        Log.d(BaseApplication.TAG, "UsbBroadcastReceiver onRegister")
     }
 
     //销毁广播
     fun onDestroy(){
-        context.unregisterReceiver(this)
-        Log.d(TAG, "USB广播被销毁啦")
+        BaseApplication.getInstance().unregisterReceiver(this)
+        Log.d(TAG, "UsbBroadcastReceiver onDestroy")
     }
 
     companion object{

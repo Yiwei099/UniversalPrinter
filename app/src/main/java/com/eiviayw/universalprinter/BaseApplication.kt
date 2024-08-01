@@ -13,7 +13,7 @@ class BaseApplication : Application() {
                 instance ?: BaseApplication().also { instance = it }
             }
 
-        private const val TAG = "BaseApplication"
+        const val TAG = "PrinterKeeper"
     }
 
     override fun onCreate() {

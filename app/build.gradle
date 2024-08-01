@@ -77,6 +77,11 @@ dependencies {
     implementation libs.runtime.livedata
     implementation libs.printSupport
     implementation libs.drawingSupport
+    implementation libs.viewModelCompose
+
+    implementation libs.kotlinx.coroutines.android
+    implementation libs.kotlinx.coroutines.core
+//    implementation libs.kotlinx.coroutines.flow
 
     testImplementation libs.junit
     androidTestImplementation libs.androidx.junit
