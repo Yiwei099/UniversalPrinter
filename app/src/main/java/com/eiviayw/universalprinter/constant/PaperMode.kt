@@ -1,4 +1,4 @@
-package com.eiviayw.universalprinter.bean
+package com.eiviayw.universalprinter.constant
 
 enum class PaperMode(
     val value:Int,

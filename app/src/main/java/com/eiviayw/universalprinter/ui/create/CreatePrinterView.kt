@@ -1,4 +1,4 @@
-package com.eiviayw.universalprinter
+package com.eiviayw.universalprinter.ui.create
 
 import android.text.TextUtils
 import androidx.compose.foundation.layout.Arrangement
@@ -21,9 +21,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
-import com.eiviayw.universalprinter.bean.ConnectMode
-import com.eiviayw.universalprinter.bean.PrinterMode
-import com.eiviayw.universalprinter.bean.SDKMode
+import com.eiviayw.universalprinter.constant.ConnectMode
+import com.eiviayw.universalprinter.constant.PrinterMode
+import com.eiviayw.universalprinter.constant.SDKMode
 import com.eiviayw.universalprinter.dialog.BleToothPrinterDialog
 import com.eiviayw.universalprinter.dialog.ConnectModeDialog
 import com.eiviayw.universalprinter.dialog.PrinterModeDialog
@@ -31,7 +31,6 @@ import com.eiviayw.universalprinter.dialog.SDKModeDialog
 import com.eiviayw.universalprinter.dialog.UsbPrinterDialog
 import com.eiviayw.universalprinter.viewMode.MainViewMode
 import com.eiviayw.universalprinter.views.ComButton
-import com.eiviayw.universalprinter.views.ComItemOption
 import com.eiviayw.universalprinter.views.StepOption
 
 /**

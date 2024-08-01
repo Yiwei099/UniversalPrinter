@@ -6,7 +6,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.eiviayw.library.draw.BitmapOption
-import com.eiviayw.library.util.BitmapUtils
 import com.eiviayw.print.base.BasePrinter
 import com.eiviayw.print.bean.mission.GraphicMission
 import com.eiviayw.print.gprinter.EscBtGPrinter
@@ -17,11 +16,11 @@ import com.eiviayw.print.gprinter.TscNetGPrinter
 import com.eiviayw.print.gprinter.TscUsbGPrinter
 import com.eiviayw.print.native.NativeUsbPrinter
 import com.eiviayw.universalprinter.BaseApplication
-import com.eiviayw.universalprinter.bean.BuildMode
-import com.eiviayw.universalprinter.bean.ConnectMode
-import com.eiviayw.universalprinter.bean.PaperMode
-import com.eiviayw.universalprinter.bean.PrinterMode
-import com.eiviayw.universalprinter.bean.SDKMode
+import com.eiviayw.universalprinter.constant.BuildMode
+import com.eiviayw.universalprinter.constant.ConnectMode
+import com.eiviayw.universalprinter.constant.PaperMode
+import com.eiviayw.universalprinter.constant.PrinterMode
+import com.eiviayw.universalprinter.constant.SDKMode
 import com.eiviayw.universalprinter.provide.EscDataProvide
 import com.eiviayw.universalprinter.provide.LabelProvide
 import com.gprinter.utils.Command
@@ -373,7 +372,7 @@ class MainViewMode : ViewModel() {
     /**
      * 开始打印
      */
-    fun startPrint(printer:BasePrinter,isEsc:Boolean,times:Int = 1, startIndex:String, topIndex:String, paperSize: PaperMode, buildMode:BuildMode){
+    fun startPrint(printer:BasePrinter, isEsc:Boolean, times:Int = 1, startIndex:String, topIndex:String, paperSize: PaperMode, buildMode: BuildMode){
         val bitmapOption:BitmapOption
         val data = if (isEsc){
             bitmapOption = when (paperSize) {

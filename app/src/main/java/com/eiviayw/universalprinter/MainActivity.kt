@@ -13,10 +13,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
@@ -28,9 +25,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.ViewModelProvider
 import com.eiviayw.print.base.BasePrinter
 import com.eiviayw.print.eprinter.EpsonPrinter
@@ -40,8 +34,9 @@ import com.eiviayw.print.gprinter.EscUsbGPrinter
 import com.eiviayw.print.gprinter.TscBtGPrinter
 import com.eiviayw.print.gprinter.TscNetGPrinter
 import com.eiviayw.print.gprinter.TscUsbGPrinter
-import com.eiviayw.universalprinter.bean.ConnectMode
-import com.eiviayw.universalprinter.dialog.ConnectModeDialog
+import com.eiviayw.universalprinter.constant.ConnectMode
+import com.eiviayw.universalprinter.ui.create.CreatePrinterView
+import com.eiviayw.universalprinter.ui.print.StartPrintView
 import com.eiviayw.universalprinter.ui.theme.UniversalPrinterTheme
 import com.eiviayw.universalprinter.util.BlueToothBroadcastReceiver
 import com.eiviayw.universalprinter.util.BlueToothHelper

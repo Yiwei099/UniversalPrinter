@@ -24,11 +24,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import com.eiviayw.universalprinter.bean.BuildMode
-import com.eiviayw.universalprinter.bean.ConnectMode
-import com.eiviayw.universalprinter.bean.PaperMode
-import com.eiviayw.universalprinter.bean.PrinterMode
-import com.eiviayw.universalprinter.bean.SDKMode
+import com.eiviayw.universalprinter.constant.BuildMode
+import com.eiviayw.universalprinter.constant.ConnectMode
+import com.eiviayw.universalprinter.constant.PaperMode
+import com.eiviayw.universalprinter.constant.PrinterMode
+import com.eiviayw.universalprinter.constant.SDKMode
 import com.eiviayw.universalprinter.ui.theme.ColorE9E9E9
 import com.eiviayw.universalprinter.viewMode.MainViewMode
 import com.eiviayw.universalprinter.views.ChoseOption
