@@ -1,5 +1,6 @@
 package com.eiviayw.universalprinter.ui.create
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -16,6 +17,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.eiviayw.universalprinter.BaseApplication
 import com.eiviayw.universalprinter.constant.ConnectMode
 import com.eiviayw.universalprinter.constant.PrinterMode
 import com.eiviayw.universalprinter.constant.SDKMode
@@ -101,7 +103,31 @@ fun BindPrinterView(
         ) {
             ComButton(
                 value = "保存",
-                click = {  }
+                click = {
+                    if (newPrinter.connectMode == ConnectMode.BLE) {
+                        if (newPrinter.address.isEmpty()) {
+                            Toast.makeText(BaseApplication.getInstance(), "蓝牙地址不能为空", Toast.LENGTH_SHORT).show()
+                            return@ComButton
+                        }
+
+                        viewModel.savePrinter()
+                    }
+
+                    if (newPrinter.connectMode == ConnectMode.WIFI) {
+                        if (newPrinter.address.isEmpty()) {
+                            Toast.makeText(BaseApplication.getInstance(), "Ip地址不能为空", Toast.LENGTH_SHORT).show()
+                            return@ComButton
+                        }
+
+                        viewModel.savePrinter()
+                    }
+
+                    if (newPrinter.connectMode == ConnectMode.USB) {
+                        newPrinter.usbDevice?.let {
+                            viewModel.savePrinter()
+                        } ?: { Toast.makeText(BaseApplication.getInstance(), "请选择USB设备", Toast.LENGTH_SHORT).show() }
+                    }
+                }
             )
         }
     }

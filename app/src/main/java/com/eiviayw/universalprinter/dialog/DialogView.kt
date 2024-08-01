@@ -1,11 +1,8 @@
 package com.eiviayw.universalprinter.dialog
 
-import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.content.IntentFilter
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import android.os.Build
@@ -42,7 +39,6 @@ import com.eiviayw.universalprinter.ui.theme.ColorE9E9E9
 import com.eiviayw.universalprinter.util.BlueToothBroadcastReceiver
 import com.eiviayw.universalprinter.util.BlueToothHelper
 import com.eiviayw.universalprinter.util.UsbBroadcastReceiver
-import com.eiviayw.universalprinter.viewMode.MainViewMode
 import com.eiviayw.universalprinter.viewMode.MyViewModel
 import com.eiviayw.universalprinter.views.ChoseOption
 import com.eiviayw.universalprinter.views.ComButton

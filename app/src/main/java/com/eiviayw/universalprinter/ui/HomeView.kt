@@ -1,6 +1,5 @@
 package com.eiviayw.universalprinter.ui
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
@@ -11,6 +10,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eiviayw.universalprinter.R
 import com.eiviayw.universalprinter.bean.MyPrinter
 import com.eiviayw.universalprinter.ui.create.BindPrinterView
+import com.eiviayw.universalprinter.ui.print.StartPrintView
 import com.eiviayw.universalprinter.viewMode.MyViewModel
 import com.eiviayw.universalprinter.views.ComItemOption
 import com.eiviayw.universalprinter.views.ComTopBar
@@ -44,9 +44,9 @@ fun Home(viewModel: MyViewModel = viewModel()) {
             }
         )
         Row {
-            PrinterListView(modifier = Modifier.weight(3f)) { it, name->
+            PrinterListView(modifier = Modifier.weight(3f)) {
                 //打开设置打印机视图
-                viewModel.showModifyPrinterView(true)
+                viewModel.startPrinter(it)
             }
             if (printerList.isNotEmpty() || showBindPrinterView) {
                 if (showBindPrinterView) {
@@ -54,7 +54,7 @@ fun Home(viewModel: MyViewModel = viewModel()) {
                     BindPrinterView(modifier = Modifier.weight(7f))
                 } else if (showModifyPrinterView) {
                     ComVerticalLine()
-//                    StartPrintView(modifier = Modifier.weight(7f))
+                    StartPrintView(modifier = Modifier.weight(7f))
                 }
             } else {
                 EmptyView(tips = stringResource(R.string.empty_printer_list_tips))
@@ -67,7 +67,7 @@ fun Home(viewModel: MyViewModel = viewModel()) {
 fun PrinterListView(
     modifier: Modifier = Modifier,
     viewModel: MyViewModel = viewModel(),
-    printerItemClick: (MyPrinter, String) -> Unit
+    printerItemClick: (MyPrinter) -> Unit
 ) {
     val printerList = viewModel.myPrinterList.collectAsState().value
 
@@ -81,7 +81,7 @@ fun PrinterListView(
                 ComItemOption(
                     title = it.name,
                     value = "",
-                    onClick = { printerItemClick.invoke(it,it.name) }
+                    onClick = { printerItemClick.invoke(it) }
                 )
             }
         }

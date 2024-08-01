@@ -64,7 +64,7 @@ class HomeActivity: ComponentActivity() {
             add(Manifest.permission.ACCESS_COARSE_LOCATION)
             PermissionUtil.getInstance().getPermissionFromSDKVersionS()
         }, onSuccess = {
-
+                Log.d(BaseApplication.TAG, "initData: Permission all pass")
         }, onFailure = {
             //申请权限
             permReqLauncher.launch(it.toTypedArray())

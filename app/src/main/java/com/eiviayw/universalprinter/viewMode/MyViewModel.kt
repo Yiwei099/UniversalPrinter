@@ -2,9 +2,11 @@ package com.eiviayw.universalprinter.viewMode
 
 import android.bluetooth.BluetoothDevice
 import android.hardware.usb.UsbDevice
+import android.text.TextUtils
 import androidx.lifecycle.ViewModel
 import com.eiviayw.universalprinter.bean.MyPrinter
 import com.eiviayw.universalprinter.bean.state.ViewState
+import com.eiviayw.universalprinter.util.StringUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -28,6 +30,9 @@ class MyViewModel:ViewModel() {
     //Usb设备列表
     private val _usbDevicesList = MutableStateFlow<Set<UsbDevice>>(emptySet())
     var usbDevicesList = _usbDevicesList.asStateFlow()
+
+    private val _startPrintPrinter = MutableStateFlow<MyPrinter?>(null)
+    val startPrintPrinter:StateFlow<MyPrinter?> = _startPrintPrinter
 
     /**
      * 显示编辑打印机视图
@@ -64,6 +69,14 @@ class MyViewModel:ViewModel() {
         _viewState.value = _viewState.value.copy(showSDKModeListDialog = show)
     }
 
+    fun showPaperListDialog(show: Boolean){
+        _viewState.value = _viewState.value.copy(showPaperListDialog = show)
+    }
+
+    fun showBuildListDialog(show: Boolean){
+        _viewState.value = _viewState.value.copy(showBuildListDialog = show)
+    }
+
     fun showDeviceListDialog(show:Boolean){
         _viewState.value = _viewState.value.copy(showDeviceListDialog = show)
     }
@@ -84,7 +97,34 @@ class MyViewModel:ViewModel() {
         _usbDevicesList.value -= setOf(device)
     }
 
-    companion object{
-        private const val TAG = "MyViewModel"
+    fun startPrinter(printer: MyPrinter){
+        _startPrintPrinter.value = printer
+        showModifyPrinterView(true)
     }
+
+    fun modifyPrinter(printer: MyPrinter){
+        _myPrinter.value = printer
+    }
+
+    fun deletePrinter(printer: MyPrinter){
+        _myPrinterList.value -= setOf(printer)
+        _startPrintPrinter.value = null
+    }
+
+    fun savePrinter(){
+        if (TextUtils.isEmpty(_myPrinter.value.id)){
+            _myPrinter.value.apply {
+                id = StringUtils.getInstance().getRandomNum(6)
+                name = "编号：${id}"
+            }
+
+            _myPrinterList.value += listOf(_myPrinter.value)
+            _myPrinter.value = MyPrinter()
+        }else{
+            _myPrinter.value.markDataChange()
+        }
+
+        showBindPrinterView(false)
+    }
+
 }

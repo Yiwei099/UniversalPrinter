@@ -7,4 +7,6 @@ data class ViewState(
     val showPrinterModeListDialog:Boolean = false,
     val showSDKModeListDialog:Boolean = false,
     val showDeviceListDialog:Boolean = false,
+    val showPaperListDialog:Boolean = false,
+    val showBuildListDialog:Boolean = false,
 )
