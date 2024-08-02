@@ -1,7 +1,24 @@
 <resources>
-    <string name="app_name">PrinterKeeper</string>
+    <string name="app_name">打印调试管家</string>
     <string name="cancel">返回</string>
     <string name="create">创建</string>
     <string name="empty_printer_list_tips">点击右上角【创建】打印机开始体验吧~~</string>
     <string name="empty_printer_list_tips_1">尚未添加打印机</string>
+    <string name="choose_connection_type">1. 选择连接方式</string>
+    <string name="connection_type">连接方式</string>
+    <string name="choose_printing_mode">2. 选择打印模式</string>
+    <string name="printing_mode">打印模式</string>
+    <string name="choose_sdk_policy">3. 选择SDK策略</string>
+    <string name="sdk_policy">SDK策略</string>
+    <string name="blue_tooth">蓝牙</string>
+    <string name="usb">USB</string>
+    <string name="choose_x_device">4. 选择 %1$s 设备</string>
+    <string name="device">打印机</string>
+    <string name="device_ip">设备IP地址</string>
+    <string name="save">保存</string>
+    <string name="blue_tooth_device_ip_dont_empty">蓝牙地址不能为空</string>
+    <string name="device_ip_dont_empty">Ip地址不能为空</string>
+    <string name="please_select_a_usb_device">请选择USB设备</string>
+    <string name="g_printer">佳博</string>
+    <string name="print_times">打印份数</string>
 </resources>

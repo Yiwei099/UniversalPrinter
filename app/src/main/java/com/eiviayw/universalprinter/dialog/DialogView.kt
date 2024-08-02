@@ -209,7 +209,7 @@ fun UsbPrinterDialogV1(
             )
 
             LazyColumn(
-                modifier = Modifier.height(500.dp)
+                modifier = Modifier.height(300.dp)
             ) {
                 items(
                     devicesList.toList(),
@@ -300,7 +300,7 @@ fun BleToothPrinterDialogV1(
             )
 
             LazyColumn(
-                modifier = Modifier.height(500.dp)
+                modifier = Modifier.height(300.dp)
             ) {
                 items(
                     dataState.toList(),

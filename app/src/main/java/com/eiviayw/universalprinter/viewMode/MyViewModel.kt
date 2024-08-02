@@ -31,9 +31,6 @@ class MyViewModel:ViewModel() {
     private val _usbDevicesList = MutableStateFlow<Set<UsbDevice>>(emptySet())
     var usbDevicesList = _usbDevicesList.asStateFlow()
 
-    private val _startPrintPrinter = MutableStateFlow<MyPrinter?>(null)
-    val startPrintPrinter:StateFlow<MyPrinter?> = _startPrintPrinter
-
     /**
      * 显示编辑打印机视图
      */
@@ -79,6 +76,11 @@ class MyViewModel:ViewModel() {
 
     fun showDeviceListDialog(show:Boolean){
         _viewState.value = _viewState.value.copy(showDeviceListDialog = show)
+        if (!show){
+            //关闭设备选择列表清空缓存
+            _bleDevicesSet.value = emptySet()
+            _usbDevicesList.value = emptySet()
+        }
     }
 
     fun addBleDevice(device: BluetoothDevice) {
@@ -97,18 +99,12 @@ class MyViewModel:ViewModel() {
         _usbDevicesList.value -= setOf(device)
     }
 
-    fun startPrinter(printer: MyPrinter){
-        _startPrintPrinter.value = printer
-        showModifyPrinterView(true)
-    }
-
     fun modifyPrinter(printer: MyPrinter){
         _myPrinter.value = printer
     }
 
     fun deletePrinter(printer: MyPrinter){
         _myPrinterList.value -= setOf(printer)
-        _startPrintPrinter.value = null
     }
 
     fun savePrinter(){

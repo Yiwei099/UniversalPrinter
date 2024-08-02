@@ -10,26 +10,19 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.eiviayw.print.gprinter.EscBtGPrinter
-import com.eiviayw.print.gprinter.EscNetGPrinter
-import com.eiviayw.print.gprinter.EscUsbGPrinter
-import com.eiviayw.print.gprinter.TscBtGPrinter
-import com.eiviayw.print.gprinter.TscUsbGPrinter
-import com.eiviayw.print.native.NativeUsbPrinter
+import com.eiviayw.universalprinter.R
 import com.eiviayw.universalprinter.bean.MyPrinter
-import com.eiviayw.universalprinter.constant.BuildMode
 import com.eiviayw.universalprinter.constant.PaperMode
 import com.eiviayw.universalprinter.dialog.BuildModeDialog
 import com.eiviayw.universalprinter.dialog.PaperSizeDialog
@@ -37,41 +30,44 @@ import com.eiviayw.universalprinter.ui.theme.Color177FF
 import com.eiviayw.universalprinter.ui.theme.ColorE9E9E9
 import com.eiviayw.universalprinter.ui.theme.ColorFF3434
 import com.eiviayw.universalprinter.ui.theme.OrangeFF870D
-import com.eiviayw.universalprinter.viewMode.MainViewMode
 import com.eiviayw.universalprinter.viewMode.MyViewModel
 import com.eiviayw.universalprinter.views.ComButton
 import com.eiviayw.universalprinter.views.StepOption
-import com.gprinter.utils.Command
 
 @Composable
 fun StartPrintView(
     modifier: Modifier = Modifier,
-    viewMode: MyViewModel = viewModel()
+    viewMode: MyViewModel = viewModel(),
+    printer: MyPrinter
 ) {
     val viewState = viewMode.viewState.collectAsState().value
-    val thisPrinter = viewMode.startPrintPrinter.collectAsState().value ?: MyPrinter()
+    var printTime by remember { mutableStateOf(printer.times) }
+    var startPosition by remember { mutableStateOf(printer.startPosition) }
+    var topPosition by remember { mutableStateOf(printer.topPosition) }
 
     Column(modifier = modifier.padding(0.dp, 0.dp, 20.dp, 0.dp)) {
-            Text(text = thisPrinter.name)
+            Text(text = printer.name)
             OutlinedTextField(
-                modifier = Modifier.padding(0.dp,20.dp),
-                value = thisPrinter.times,
+                modifier = Modifier.padding(0.dp,20.dp,0.dp,0.dp),
+                value = printTime,
                 onValueChange = {
-                    thisPrinter.times = it
-                    thisPrinter.markDataChange()
+                    printTime = it
+                    printer.times = it
+                    printer.markDataChange()
                 },
-                label = { Text(text = "打印份数") },
+                label = { Text(text = stringResource(R.string.print_times)) },
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
                 ),
             )
 
-            if (!thisPrinter.isEsc()){
+            if (!printer.isEsc()){
                 OutlinedTextField(
-                    value = thisPrinter.startPosition,
+                    value = startPosition,
                     onValueChange = {
-                        thisPrinter.startPosition = it
-                        thisPrinter.markDataChange()
+                        startPosition = it
+                        printer.startPosition = it
+                        printer.markDataChange()
                     },
                     label = { Text(text = "左侧起始位置") },
                     modifier = Modifier.padding(0.dp,20.dp),
@@ -81,10 +77,11 @@ fun StartPrintView(
                 )
 
                 OutlinedTextField(
-                    value = thisPrinter.topPosition,
+                    value = topPosition,
                     onValueChange = {
-                        thisPrinter.topPosition = it
-                        thisPrinter.markDataChange()
+                        topPosition = it
+                        printer.topPosition = it
+                        printer.markDataChange()
                     },
                     label = { Text(text = "顶部起始位置") },
                     keyboardOptions = KeyboardOptions(
@@ -97,7 +94,7 @@ fun StartPrintView(
                 Modifier.padding(0.dp, 10.dp),
                 stepTitle = "选择纸张尺寸",
                 stepTips = "纸张尺寸",
-                value = thisPrinter.paperSize.label
+                value = printer.paperSize.label
             ) {
                 viewMode.showPaperListDialog(true)
             }
@@ -106,7 +103,7 @@ fun StartPrintView(
                 Modifier.padding(0.dp, 10.dp),
                 stepTitle = "选择指令类型",
                 stepTips = "指令类型",
-                value = thisPrinter.buildMode.label
+                value = printer.buildMode.label
             ) {
                 viewMode.showBuildListDialog(true)
             }
@@ -123,8 +120,8 @@ fun StartPrintView(
                         value = "删除",
                         containerColor = ColorFF3434,
                         click = {
-                            thisPrinter.releasePrinter()
-                            viewMode.deletePrinter(thisPrinter)
+                            printer.releasePrinter()
+                            viewMode.deletePrinter(printer)
                         }
                     )
 
@@ -133,7 +130,7 @@ fun StartPrintView(
                         value = "编辑",
                         containerColor = Color177FF,
                         click = {
-                            viewMode.modifyPrinter(thisPrinter)
+                            viewMode.modifyPrinter(printer)
                             viewMode.showBindPrinterView(true)
                         }
                     )
@@ -150,15 +147,15 @@ fun StartPrintView(
                         value = "缓存销毁",
                         containerColor = OrangeFF870D,
                         click = {
-                            thisPrinter.releasePrinter()
+                            printer.releasePrinter()
                         }
                     )
 
                     ComButton(
                         modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
-                        value = "打印(${thisPrinter.times})",
+                        value = "打印(${printTime})",
                         click = {
-                            thisPrinter.startPrint()
+                            printer.startPrint()
                         }
                     )
                 }
@@ -182,7 +179,7 @@ fun StartPrintView(
     }
 
     if (viewState.showPaperListDialog){
-        val paperList = if(thisPrinter?.isEsc() == true) {
+        val paperList = if(printer.isEsc()) {
             mutableListOf<PaperMode>().apply {
                 add(PaperMode.ESC_58)
                 add(PaperMode.ESC_80)
@@ -206,13 +203,13 @@ fun StartPrintView(
                     .fillMaxHeight()
                     .padding(50.dp, 20.dp),
                 list = paperList,
-                defaultChooseMode = thisPrinter?.paperSize ?: PaperMode.NONE,
+                defaultChooseMode = printer.paperSize,
                 cancel = {
                     viewMode.showPaperListDialog(false)
                 },
                 confirm = {
-                    thisPrinter?.paperSize = it
-                    thisPrinter?.markDataChange()
+                    printer.paperSize = it
+                    printer.markDataChange()
                     viewMode.showPaperListDialog(false)
                 }
             )
@@ -226,13 +223,13 @@ fun StartPrintView(
                     .fillMaxWidth()
                     .fillMaxHeight()
                     .padding(50.dp, 20.dp),
-                defaultChooseMode = thisPrinter?.buildMode ?: BuildMode.Graphic,
+                defaultChooseMode = printer.buildMode,
                 cancel = {
                     viewMode.showBuildListDialog(false)
                 },
                 confirm = {
-                    thisPrinter?.buildMode = it
-                    thisPrinter?.markDataChange()
+                    printer.buildMode = it
+                    printer.markDataChange()
                     viewMode.showBuildListDialog(false)
                 }
             )

@@ -4,6 +4,10 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -25,14 +29,12 @@ fun Home(viewModel: MyViewModel = viewModel()) {
     val showModifyPrinterView = state.showModifyPrinterView
 
     val printerList = viewModel.myPrinterList.collectAsState().value
+    var thisPrinter by remember { mutableStateOf<MyPrinter?>(null) }
 
     Column {
         ComTopBar(
             title = stringResource(id = R.string.app_name),
-            actionTitle = if (showBindPrinterView)
-                stringResource(R.string.cancel)
-            else
-                stringResource(R.string.create),
+            actionTitle = stringResource(if (showBindPrinterView) R.string.cancel else R.string.create),
             onActionClick = {
                 if (showBindPrinterView) {
                     //关闭绑定设备视图
@@ -46,15 +48,17 @@ fun Home(viewModel: MyViewModel = viewModel()) {
         Row {
             PrinterListView(modifier = Modifier.weight(3f)) {
                 //打开设置打印机视图
-                viewModel.startPrinter(it)
+                thisPrinter = it
+                viewModel.showModifyPrinterView(true)
             }
             if (printerList.isNotEmpty() || showBindPrinterView) {
+                ComVerticalLine()
                 if (showBindPrinterView) {
-                    ComVerticalLine()
                     BindPrinterView(modifier = Modifier.weight(7f))
                 } else if (showModifyPrinterView) {
-                    ComVerticalLine()
-                    StartPrintView(modifier = Modifier.weight(7f))
+                    thisPrinter?.let {
+                        StartPrintView(modifier = Modifier.weight(7f), printer = it)
+                    }
                 }
             } else {
                 EmptyView(tips = stringResource(R.string.empty_printer_list_tips))

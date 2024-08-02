@@ -13,11 +13,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eiviayw.universalprinter.BaseApplication
+import com.eiviayw.universalprinter.R
 import com.eiviayw.universalprinter.constant.ConnectMode
 import com.eiviayw.universalprinter.constant.PrinterMode
 import com.eiviayw.universalprinter.constant.SDKMode
@@ -41,8 +43,8 @@ fun BindPrinterView(
     Column(modifier = modifier.padding(0.dp, 0.dp, 20.dp, 0.dp)) {
         StepOption(
             Modifier.padding(0.dp, 10.dp),
-            stepTitle = "1. 选择连接方式",
-            stepTips = "连接方式",
+            stepTitle = stringResource(R.string.choose_connection_type),
+            stepTips = stringResource(R.string.connection_type),
             value = newPrinter.connectMode.label
         ) {
             viewModel.showConnectModeListDialog(true)
@@ -50,8 +52,8 @@ fun BindPrinterView(
 
         StepOption(
             modifier = Modifier.padding(0.dp, 10.dp),
-            stepTitle = "2. 选择打印模式",
-            stepTips = "打印模式",
+            stepTitle = stringResource(R.string.choose_printing_mode),
+            stepTips = stringResource(R.string.printing_mode),
             value = newPrinter.printerMode.label
         ) {
             viewModel.showPrinterModeListDialog(true)
@@ -59,8 +61,8 @@ fun BindPrinterView(
 
         StepOption(
             modifier = Modifier.padding(0.dp, 10.dp),
-            stepTitle = "3. 选择SDK策略",
-            stepTips = "SDK策略",
+            stepTitle = stringResource(R.string.choose_sdk_policy),
+            stepTips = stringResource(R.string.sdk_policy),
             value = newPrinter.sdkMode.label
         ) {
             viewModel.showSDKModeListDialog(true)
@@ -68,13 +70,13 @@ fun BindPrinterView(
 
         if (newPrinter.connectMode != ConnectMode.WIFI){
             val tips = when(newPrinter.connectMode){
-                ConnectMode.BLE -> "蓝牙"
-                else -> "USB"
+                ConnectMode.BLE -> stringResource(R.string.blue_tooth)
+                else -> stringResource(R.string.usb)
             }
             StepOption(
                 modifier = Modifier.padding(0.dp, 10.dp),
-                stepTitle = "4. 选择 $tips 打印机",
-                stepTips = "打印机",
+                stepTitle = stringResource(R.string.choose_x_device, tips),
+                stepTips = stringResource(R.string.device),
                 value = when (newPrinter.connectMode) {
                     ConnectMode.BLE -> newPrinter.address
                     ConnectMode.USB -> newPrinter.usbDevice?.manufacturerName ?: ""
@@ -87,7 +89,7 @@ fun BindPrinterView(
             OutlinedTextField(
                 value = newPrinter.address,
                 onValueChange = { newPrinter.address = it },
-                label = { Text(text = "打印机IP地址") },
+                label = { Text(text = stringResource(R.string.device_ip)) },
                 modifier = Modifier.padding(0.dp,20.dp),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Ascii,
@@ -102,11 +104,11 @@ fun BindPrinterView(
             horizontalArrangement = Arrangement.End
         ) {
             ComButton(
-                value = "保存",
+                value = stringResource(R.string.save),
                 click = {
                     if (newPrinter.connectMode == ConnectMode.BLE) {
                         if (newPrinter.address.isEmpty()) {
-                            Toast.makeText(BaseApplication.getInstance(), "蓝牙地址不能为空", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(BaseApplication.getInstance(),BaseApplication.getInstance().getString(R.string.blue_tooth_device_ip_dont_empty), Toast.LENGTH_SHORT).show()
                             return@ComButton
                         }
 
@@ -115,7 +117,8 @@ fun BindPrinterView(
 
                     if (newPrinter.connectMode == ConnectMode.WIFI) {
                         if (newPrinter.address.isEmpty()) {
-                            Toast.makeText(BaseApplication.getInstance(), "Ip地址不能为空", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(BaseApplication.getInstance(),
+                                BaseApplication.getInstance().getString(R.string.device_ip_dont_empty), Toast.LENGTH_SHORT).show()
                             return@ComButton
                         }
 
@@ -125,7 +128,9 @@ fun BindPrinterView(
                     if (newPrinter.connectMode == ConnectMode.USB) {
                         newPrinter.usbDevice?.let {
                             viewModel.savePrinter()
-                        } ?: { Toast.makeText(BaseApplication.getInstance(), "请选择USB设备", Toast.LENGTH_SHORT).show() }
+                        } ?: { Toast.makeText(BaseApplication.getInstance(),
+                            BaseApplication.getInstance()
+                                .getString(R.string.please_select_a_usb_device), Toast.LENGTH_SHORT).show() }
                     }
                 }
             )
@@ -194,41 +199,45 @@ fun BindPrinterView(
     }
 
     if (viewState.showDeviceListDialog){
-        if (newPrinter.connectMode == ConnectMode.BLE){
-            Dialog(onDismissRequest = { viewModel.showDeviceListDialog(false) }) {
-                BleToothPrinterDialogV1(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight()
-                        .padding(50.dp, 20.dp),
-                    defaultChooseAddress = newPrinter.address,
-                    cancel = {
-                        viewModel.showDeviceListDialog(false)
-                    },
-                    confirm = {
-                        newPrinter.address = it
-                        viewModel.showDeviceListDialog(false)
-                    }
-                )
+        when (newPrinter.connectMode) {
+            ConnectMode.BLE -> {
+                Dialog(onDismissRequest = { viewModel.showDeviceListDialog(false) }) {
+                    BleToothPrinterDialogV1(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .padding(50.dp, 20.dp),
+                        defaultChooseAddress = newPrinter.address,
+                        cancel = {
+                            viewModel.showDeviceListDialog(false)
+                        },
+                        confirm = {
+                            newPrinter.address = it
+                            viewModel.showDeviceListDialog(false)
+                        }
+                    )
+                }
             }
-        }else if (newPrinter.connectMode == ConnectMode.USB){
-            Dialog(onDismissRequest = { viewModel.showDeviceListDialog(false) }) {
-                UsbPrinterDialogV1(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .fillMaxHeight()
-                        .padding(50.dp, 20.dp),
-                    cancel = {
-                        viewModel.showDeviceListDialog(false)
-                    },
-                    confirm = {
-                        newPrinter.usbDevice = it
-                        viewModel.showDeviceListDialog(false)
-                    }
-                )
+            ConnectMode.USB -> {
+                Dialog(onDismissRequest = { viewModel.showDeviceListDialog(false) }) {
+                    UsbPrinterDialogV1(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .fillMaxHeight()
+                            .padding(50.dp, 20.dp),
+                        cancel = {
+                            viewModel.showDeviceListDialog(false)
+                        },
+                        confirm = {
+                            newPrinter.usbDevice = it
+                            viewModel.showDeviceListDialog(false)
+                        }
+                    )
+                }
             }
-        }else{
-            //其它
+            else -> {
+                //其它
+            }
         }
     }
 }
