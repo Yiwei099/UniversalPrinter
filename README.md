@@ -10,10 +10,12 @@
 ![ImageText](https://github.com/Yiwei099/UniversalPrinter/blob/master/app/src/main/res/mipmap-hdpi/esc_printer.jpg)
 ![ImageText](https://github.com/Yiwei099/UniversalPrinter/blob/master/app/src/main/res/mipmap-hdpi/tsc_printer.jpg)
 
+## 下载方式
+![ImageText](https://github.com/Yiwei099/UniversalPrinter/blob/master/app/src/main/res/mipmap-hdpi/download.png)
 
 ## 更新日志
 * 2024-08-02 增加SDK的使用演示(v1.0.0)
 
 
-### 4. 联系我
+### 4. 联系我催更
 ![Image Text](https://github.com/Yiwei099/PrintSupport/blob/master/app/src/main/res/drawable/wechat_qr_code.png)
