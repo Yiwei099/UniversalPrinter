@@ -61,8 +61,8 @@ data class MyPrinter(
                 mContext = BaseApplication.getInstance(),
                 usbDevice = usbDevice!!,
                 commandType = if (isEsc()) Command.ESC else Command.TSC,
-                adjustX = if (TextUtils.isEmpty(startPosition)) 0 else startPosition.toInt(),
-                adjustY = if (TextUtils.isEmpty(topPosition)) 0 else topPosition.toInt(),
+                adjustX = getStartPositionFloat().toInt(),
+                adjustY = getTopPositionFloat().toInt(),
                 density = density.value
             )
 
@@ -126,8 +126,8 @@ data class MyPrinter(
                         TscNetGPrinter(
                             mContext = BaseApplication.getInstance(),
                             ipAddress = address,
-                            adjustY = if (TextUtils.isEmpty(topPosition)) 0 else topPosition.toInt(),
-                            adjustX = if (TextUtils.isEmpty(startPosition)) 0 else startPosition.toInt(),
+                            adjustY = getTopPositionFloat().toInt(),
+                            adjustX = getStartPositionFloat().toInt(),
                             density = density.value
                         )
                     }
@@ -157,7 +157,7 @@ data class MyPrinter(
 
     private fun print(){
         supportPrinter?.let {
-            it.addMission(GraphicMission(printSourceData!!, forward = forWordMode.value).apply {
+            it.addMission(GraphicMission(printSourceData!!, forward = forWordMode.value,selfAdaptionHeight = paperSize == PaperMode.NONE).apply {
                 count = times.toInt()
                 countByOne = false
                 if (!isEsc()){
@@ -175,28 +175,31 @@ data class MyPrinter(
         printSourceData = if (isEsc()){
             bitmapOption = when (paperSize) {
                 PaperMode.ESC_58 -> {
-                    BitmapOption(maxWidth = 384)
+                    BitmapOption(maxWidth = 384, startIndentation = getStartPositionFloat(), topIndentation = getTopPositionFloat())
                 }
                 PaperMode.ESC_80 -> {
-                    BitmapOption()
+                    BitmapOption(startIndentation = getStartPositionFloat(), topIndentation = getTopPositionFloat())
                 }
                 else -> {
-                    BitmapOption()
+                    BitmapOption(startIndentation = getStartPositionFloat(), topIndentation = getTopPositionFloat())
                 }
             }
             EscDataProvide(bitmapOption).getData()
         }else{
             bitmapOption = when (paperSize) {
-                PaperMode.TSC_3020 -> BitmapOption(maxWidth = 240, maxHeight = 160)
-                PaperMode.TSC_4060 -> BitmapOption(maxWidth = 320, maxHeight = 480)
-                PaperMode.TSC_4080 -> BitmapOption(maxWidth = 320, maxHeight = 640)
-                PaperMode.TSC_6040 -> BitmapOption(maxWidth = 480, maxHeight = 320)
-                PaperMode.TSC_6080 -> BitmapOption(maxWidth = 480, maxHeight = 640)
-                else -> BitmapOption(maxWidth = 320, maxHeight = 240)
+                PaperMode.TSC_3020 -> BitmapOption(maxWidth = 240, maxHeight = 160, startIndentation = getStartPositionFloat(),topIndentation = getTopPositionFloat())
+                PaperMode.TSC_4060 -> BitmapOption(maxWidth = 320, maxHeight = 480, startIndentation = getStartPositionFloat(),topIndentation = getTopPositionFloat())
+                PaperMode.TSC_4080 -> BitmapOption(maxWidth = 320, maxHeight = 640, startIndentation = getStartPositionFloat(),topIndentation = getTopPositionFloat())
+                PaperMode.TSC_6040 -> BitmapOption(maxWidth = 480, maxHeight = 320, startIndentation = getStartPositionFloat(),topIndentation = getTopPositionFloat())
+                PaperMode.TSC_6080 -> BitmapOption(maxWidth = 480, maxHeight = 640, startIndentation = getStartPositionFloat(),topIndentation = getTopPositionFloat())
+                else -> BitmapOption(maxWidth = 320, maxHeight = 240, startIndentation = getStartPositionFloat(), topIndentation = getTopPositionFloat())
             }
             LabelProvide(bitmapOption).getData()
         }
     }
+
+    private fun getStartPositionFloat() = if (TextUtils.isEmpty(startPosition)) 0f else startPosition.toFloat()
+    private fun getTopPositionFloat() = if (TextUtils.isEmpty(topPosition)) 0f else topPosition.toFloat()
 
     fun markDataChange(){
         dataChange = true
