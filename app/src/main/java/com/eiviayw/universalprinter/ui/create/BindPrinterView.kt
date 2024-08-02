@@ -13,6 +13,10 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -40,6 +44,7 @@ fun BindPrinterView(
 ) {
     val viewState = viewModel.viewState.collectAsState().value
     val newPrinter = viewModel.myPrinter.collectAsState().value
+    var address by remember { mutableStateOf(newPrinter.address) }
 
     LazyColumn(modifier = modifier.padding(0.dp, 0.dp, 20.dp, 0.dp)) {
         item {
@@ -95,8 +100,11 @@ fun BindPrinterView(
                 }
             } else {
                 OutlinedTextField(
-                    value = newPrinter.address,
-                    onValueChange = { newPrinter.address = it },
+                    value = address,
+                    onValueChange = {
+                        address = it
+                        newPrinter.address = it
+                    },
                     label = { Text(text = stringResource(R.string.device_ip)) },
                     modifier = Modifier.padding(0.dp, 20.dp),
                     keyboardOptions = KeyboardOptions(

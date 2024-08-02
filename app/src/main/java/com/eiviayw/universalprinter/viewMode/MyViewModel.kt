@@ -73,6 +73,12 @@ class MyViewModel:ViewModel() {
     fun showBuildListDialog(show: Boolean){
         _viewState.value = _viewState.value.copy(showBuildListDialog = show)
     }
+    fun showForWordListDialog(show: Boolean){
+        _viewState.value = _viewState.value.copy(showForWordListDialog = show)
+    }
+    fun showDensityListDialog(show: Boolean){
+        _viewState.value = _viewState.value.copy(showDensityListDialog = show)
+    }
 
     fun showDeviceListDialog(show:Boolean){
         _viewState.value = _viewState.value.copy(showDeviceListDialog = show)

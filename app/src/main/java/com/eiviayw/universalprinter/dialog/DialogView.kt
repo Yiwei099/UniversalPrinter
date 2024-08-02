@@ -37,6 +37,8 @@ import androidx.compose.ui.unit.dp
 import com.eiviayw.universalprinter.BaseApplication
 import com.eiviayw.universalprinter.constant.BuildMode
 import com.eiviayw.universalprinter.constant.ConnectMode
+import com.eiviayw.universalprinter.constant.DensityMode
+import com.eiviayw.universalprinter.constant.ForWordMode
 import com.eiviayw.universalprinter.constant.PaperMode
 import com.eiviayw.universalprinter.constant.PrinterMode
 import com.eiviayw.universalprinter.constant.SDKMode
@@ -47,6 +49,7 @@ import com.eiviayw.universalprinter.util.UsbBroadcastReceiver
 import com.eiviayw.universalprinter.viewMode.MyViewModel
 import com.eiviayw.universalprinter.views.ChoseOption
 import com.eiviayw.universalprinter.views.ComButton
+import com.gprinter.command.LabelCommand
 
 @Composable
 fun ConnectModeDialog(
@@ -64,6 +67,7 @@ fun ConnectModeDialog(
     var chooseMode by remember { mutableStateOf(defaultChooseMode) }
 
     ItemOptionList(
+        title = "选择连接方式",
         data = connectModeList,
         modifier = modifier,
         getItemName = { it.label },
@@ -94,6 +98,7 @@ fun PrinterModeDialog(
     var chooseMode by remember { mutableStateOf(defaultChooseMode) }
 
     ItemOptionList(
+        title = "选择打印模式",
         data = printerModeList,
         modifier = modifier,
         getItemName = { it.label },
@@ -120,6 +125,7 @@ fun SDKModeDialog(
     var chooseMode by remember { mutableStateOf(defaultChooseMode) }
 
     ItemOptionList(
+        title = "选择SDK策略",
         data = dataList,
         modifier = modifier,
         getItemName = { it.label },
@@ -417,6 +423,7 @@ fun BuildModeDialog(
     var chooseMode by remember { mutableStateOf(defaultChooseMode) }
 
     ItemOptionList(
+        title = "选择数据源类型",
         data = mutableListOf<BuildMode>().apply {
             add(BuildMode.Graphic)
             add(BuildMode.Text)
@@ -435,7 +442,142 @@ fun BuildModeDialog(
 }
 
 @Composable
+fun ForWordModeDialog(
+    modifier: Modifier,
+    defaultChooseMode: ForWordMode = ForWordMode.NORMAL,
+    cancel: () -> Unit = {},
+    confirm: (ForWordMode) -> Unit = {}
+) {
+    var chooseMode by remember { mutableStateOf(defaultChooseMode) }
+
+    Surface(
+        modifier = modifier,
+        color = Color.White,
+        shape = MaterialTheme.shapes.small
+    ) {
+        Column {
+            Text(
+                text = "选择打印方向",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 6.dp),
+                textAlign = TextAlign.Center
+            )
+
+            LazyColumn(modifier = Modifier.weight(1f)) {
+                items(mutableListOf<ForWordMode>().apply {
+                    add(ForWordMode.NORMAL)
+                    add(ForWordMode.BACK_FOR_WORD)
+                }) { item ->
+                    ChoseOption(
+                        title = item.label,
+                        chooseState = item.value == chooseMode.value,
+                        click = {
+                            chooseMode = item
+                        }
+                    )
+                }
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 10.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                ComButton(
+                    value = "取消",
+                    containerColor = ColorE9E9E9,
+                    click = cancel
+                )
+                ComButton(
+                    value = "确定",
+                    click = {
+                        confirm.invoke(chooseMode)
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun DensityDialog(
+    modifier: Modifier,
+    defaultChooseMode: DensityMode = DensityMode.DENSITY_0,
+    cancel: () -> Unit = {},
+    confirm: (DensityMode) -> Unit = {}
+) {
+    var chooseMode by remember { mutableStateOf(defaultChooseMode) }
+
+    Surface(
+        modifier = modifier,
+        color = Color.White,
+        shape = MaterialTheme.shapes.small
+    ) {
+        Column {
+            Text(
+                text = "选择打印浓度",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 6.dp),
+                textAlign = TextAlign.Center
+            )
+
+            LazyColumn(modifier = Modifier.weight(1f)) {
+                items(mutableListOf<DensityMode>().apply {
+                    add(DensityMode.DENSITY_0)
+                    add(DensityMode.DENSITY_1)
+                    add(DensityMode.DENSITY_2)
+                    add(DensityMode.DENSITY_3)
+                    add(DensityMode.DENSITY_4)
+                    add(DensityMode.DENSITY_5)
+                    add(DensityMode.DENSITY_6)
+                    add(DensityMode.DENSITY_7)
+                    add(DensityMode.DENSITY_8)
+                    add(DensityMode.DENSITY_9)
+                    add(DensityMode.DENSITY_10)
+                    add(DensityMode.DENSITY_11)
+                    add(DensityMode.DENSITY_12)
+                    add(DensityMode.DENSITY_13)
+                    add(DensityMode.DENSITY_14)
+                    add(DensityMode.DENSITY_15)
+                }) { item ->
+                    ChoseOption(
+                        title = item.label,
+                        chooseState = item.value == chooseMode.value,
+                        click = {
+                            chooseMode = item
+                        }
+                    )
+                }
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 10.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                ComButton(
+                    value = "取消",
+                    containerColor = ColorE9E9E9,
+                    click = cancel
+                )
+                ComButton(
+                    value = "确定",
+                    click = {
+                        confirm.invoke(chooseMode)
+                    }
+                )
+            }
+        }
+    }
+}
+
+@Composable
 fun <T> ItemOptionList(
+    title:String = "",
     data: List<T> = emptyList(),
     modifier: Modifier = Modifier,
     getItemName: (T) -> String = { "" },
@@ -453,7 +595,7 @@ fun <T> ItemOptionList(
             modifier = Modifier.padding(10.dp, 0.dp)
         ) {
             Text(
-                text = "选择连接方式",
+                text = title,
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(0.dp, 6.dp),

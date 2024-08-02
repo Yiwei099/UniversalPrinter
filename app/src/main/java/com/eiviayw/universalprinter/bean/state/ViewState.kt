@@ -9,4 +9,6 @@ data class ViewState(
     val showDeviceListDialog:Boolean = false,
     val showPaperListDialog:Boolean = false,
     val showBuildListDialog:Boolean = false,
+    val showForWordListDialog:Boolean = false,
+    val showDensityListDialog:Boolean = false,
 )

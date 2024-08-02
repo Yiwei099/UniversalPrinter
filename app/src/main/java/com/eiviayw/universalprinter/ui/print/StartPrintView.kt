@@ -30,6 +30,8 @@ import com.eiviayw.universalprinter.R
 import com.eiviayw.universalprinter.bean.MyPrinter
 import com.eiviayw.universalprinter.constant.PaperMode
 import com.eiviayw.universalprinter.dialog.BuildModeDialog
+import com.eiviayw.universalprinter.dialog.DensityDialog
+import com.eiviayw.universalprinter.dialog.ForWordModeDialog
 import com.eiviayw.universalprinter.dialog.PaperSizeDialog
 import com.eiviayw.universalprinter.ui.theme.Color177FF
 import com.eiviayw.universalprinter.ui.theme.ColorE9E9E9
@@ -116,11 +118,35 @@ fun StartPrintView(
         item {
             StepOption(
                 Modifier.padding(0.dp, 10.dp),
-                stepTitle = "选择指令类型",
-                stepTips = "指令类型",
+                stepTitle = "选择数据源类型",
+                stepTips = "数据源类型",
                 value = printer.buildMode.label
             ) {
                 viewMode.showBuildListDialog(true)
+            }
+        }
+
+        if (!printer.isEsc()){
+            item {
+                StepOption(
+                    Modifier.padding(0.dp, 10.dp),
+                    stepTitle = "选择打印方向",
+                    stepTips = "打印方向",
+                    value = printer.forWordMode.label
+                ) {
+                    viewMode.showForWordListDialog(true)
+                }
+            }
+
+            item {
+                StepOption(
+                    Modifier.padding(0.dp, 10.dp),
+                    stepTitle = "选择打印浓度",
+                    stepTips = "打印浓度",
+                    value = printer.density.label
+                ) {
+                    viewMode.showDensityListDialog(true)
+                }
             }
         }
 
@@ -248,6 +274,46 @@ fun StartPrintView(
                     printer.buildMode = it
                     printer.markDataChange()
                     viewMode.showBuildListDialog(false)
+                }
+            )
+        }
+    }
+
+    if (viewState.showForWordListDialog){
+        Dialog(onDismissRequest = { viewMode.showForWordListDialog(false) }) {
+            ForWordModeDialog(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .padding(50.dp, 20.dp),
+                defaultChooseMode = printer.forWordMode,
+                cancel = {
+                    viewMode.showForWordListDialog(false)
+                },
+                confirm = {
+                    printer.forWordMode = it
+                    printer.markDataChange()
+                    viewMode.showForWordListDialog(false)
+                }
+            )
+        }
+    }
+
+    if (viewState.showDensityListDialog){
+        Dialog(onDismissRequest = { viewMode.showDensityListDialog(false) }) {
+            DensityDialog(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight()
+                    .padding(50.dp, 20.dp),
+                defaultChooseMode = printer.density,
+                cancel = {
+                    viewMode.showDensityListDialog(false)
+                },
+                confirm = {
+                    printer.density = it
+                    printer.markDataChange()
+                    viewMode.showDensityListDialog(false)
                 }
             )
         }

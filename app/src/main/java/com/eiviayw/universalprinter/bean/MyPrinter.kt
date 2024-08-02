@@ -16,11 +16,14 @@ import com.eiviayw.print.native.NativeUsbPrinter
 import com.eiviayw.universalprinter.BaseApplication
 import com.eiviayw.universalprinter.constant.BuildMode
 import com.eiviayw.universalprinter.constant.ConnectMode
+import com.eiviayw.universalprinter.constant.DensityMode
+import com.eiviayw.universalprinter.constant.ForWordMode
 import com.eiviayw.universalprinter.constant.PaperMode
 import com.eiviayw.universalprinter.constant.PrinterMode
 import com.eiviayw.universalprinter.constant.SDKMode
 import com.eiviayw.universalprinter.provide.EscDataProvide
 import com.eiviayw.universalprinter.provide.LabelProvide
+import com.gprinter.command.LabelCommand
 import com.gprinter.utils.Command
 
 data class MyPrinter(
@@ -37,6 +40,8 @@ data class MyPrinter(
     var topPosition:String = "0",//顶部偏移距离
     var paperSize:PaperMode = PaperMode.NONE,//纸张尺寸
     var buildMode:BuildMode = BuildMode.Graphic,//构建模式
+    var forWordMode: ForWordMode = ForWordMode.NORMAL,//打印方向
+    var density: DensityMode = DensityMode.DENSITY_0,//打印浓度
 
     var supportPrinter:BasePrinter? = null,//打印机实例
 
@@ -57,7 +62,8 @@ data class MyPrinter(
                 usbDevice = usbDevice!!,
                 commandType = if (isEsc()) Command.ESC else Command.TSC,
                 adjustX = if (TextUtils.isEmpty(startPosition)) 0 else startPosition.toInt(),
-                adjustY = if (TextUtils.isEmpty(topPosition)) 0 else topPosition.toInt()
+                adjustY = if (TextUtils.isEmpty(topPosition)) 0 else topPosition.toInt(),
+                density = density.value
             )
 
             return
@@ -77,13 +83,14 @@ data class MyPrinter(
                         EscUsbGPrinter(
                             mContext = BaseApplication.getInstance(),
                             vID = usbDevice!!.vendorId,
-                            pID = usbDevice!!.productId
+                            pID = usbDevice!!.productId,
                         )
                     }else{
                         TscUsbGPrinter(
                             mContext = BaseApplication.getInstance(),
                             vID = usbDevice!!.vendorId,
-                            pID = usbDevice!!.productId
+                            pID = usbDevice!!.productId,
+                            density = density.value
                         )
                     }
                 }else{
@@ -100,7 +107,8 @@ data class MyPrinter(
                     }else{
                         TscBtGPrinter(
                             mContext = BaseApplication.getInstance(),
-                            macAddress = address
+                            macAddress = address,
+                            density = density.value
                         )
                     }
                 }else{
@@ -119,7 +127,8 @@ data class MyPrinter(
                             mContext = BaseApplication.getInstance(),
                             ipAddress = address,
                             adjustY = if (TextUtils.isEmpty(topPosition)) 0 else topPosition.toInt(),
-                            adjustX = if (TextUtils.isEmpty(startPosition)) 0 else startPosition.toInt()
+                            adjustX = if (TextUtils.isEmpty(startPosition)) 0 else startPosition.toInt(),
+                            density = density.value
                         )
                     }
                 }
@@ -148,14 +157,13 @@ data class MyPrinter(
 
     private fun print(){
         supportPrinter?.let {
-            it.addMission(GraphicMission(printSourceData!!).apply {
+            it.addMission(GraphicMission(printSourceData!!, forward = forWordMode.value).apply {
                 count = times.toInt()
                 countByOne = false
                 if (!isEsc()){
                     //佳博标签传值单位是 mm 必须除以8
                     bitmapWidth = bitmapOption.maxWidth / 8
                     bitmapHeight = bitmapOption.maxHeight / 8
-
                 }
             })
         } ?: {
