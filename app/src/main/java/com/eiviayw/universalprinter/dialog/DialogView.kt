@@ -6,12 +6,15 @@ import android.content.Intent
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import android.os.Build
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -27,7 +30,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import com.eiviayw.universalprinter.BaseApplication
 import com.eiviayw.universalprinter.constant.BuildMode
@@ -192,6 +197,8 @@ fun UsbPrinterDialogV1(
     var chooseDevice by remember { mutableStateOf(defaultDevice) }
     val devicesList = viewModel.usbDevicesList.collectAsState(initial = emptySet()).value
 
+    val sizeDp = DpSize(LocalConfiguration.current.screenWidthDp.dp, LocalConfiguration.current.screenHeightDp.dp)
+
     Surface(
         modifier = modifier.wrapContentHeight(),
         color = Color.White,
@@ -209,7 +216,7 @@ fun UsbPrinterDialogV1(
             )
 
             LazyColumn(
-                modifier = Modifier.height(300.dp)
+                modifier = Modifier.height(sizeDp.height * 0.7f)
             ) {
                 items(
                     devicesList.toList(),
@@ -283,8 +290,12 @@ fun BleToothPrinterDialogV1(
     var address by remember { mutableStateOf(defaultChooseAddress) }
     val dataState = viewModel.bleDevicesSet.collectAsState(initial = emptySet()).value
 
+    val sizeDp = DpSize(LocalConfiguration.current.screenWidthDp.dp, LocalConfiguration.current.screenHeightDp.dp)
+
     Surface(
-        modifier = modifier.wrapContentHeight(),
+        modifier = modifier
+            .width((LocalConfiguration.current.screenHeightDp * 0.8f).dp)
+            .height((LocalConfiguration.current.screenHeightDp * 0.8f).dp),
         color = Color.White,
         shape = MaterialTheme.shapes.small
     ) {
@@ -300,7 +311,7 @@ fun BleToothPrinterDialogV1(
             )
 
             LazyColumn(
-                modifier = Modifier.height(300.dp)
+                modifier = Modifier.weight(1f)
             ) {
                 items(
                     dataState.toList(),
@@ -348,19 +359,52 @@ fun PaperSizeDialog(
 ) {
     var chooseMode by remember { mutableStateOf(defaultChooseMode) }
 
-    ItemOptionList(
-        data = list,
+    Surface(
         modifier = modifier,
-        getItemName = { it.label },
-        getChooseState = { it.value == chooseMode.value },
-        onItemClick = {
-            chooseMode = it
-        },
-        cancel = cancel,
-        confirm = {
-            confirm.invoke(chooseMode)
+        color = Color.White,
+        shape = MaterialTheme.shapes.small
+    ) {
+        Column {
+            Text(
+                text = "选择纸张尺寸",
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 6.dp),
+                textAlign = TextAlign.Center
+            )
+
+            LazyColumn(modifier = Modifier.weight(1f)) {
+                items(list) { item ->
+                    ChoseOption(
+                        title = item.label,
+                        chooseState = item.value == chooseMode.value,
+                        click = {
+                            chooseMode = item
+                        }
+                    )
+                }
+            }
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 10.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                ComButton(
+                    value = "取消",
+                    containerColor = ColorE9E9E9,
+                    click = cancel
+                )
+                ComButton(
+                    value = "确定",
+                    click = {
+                        confirm.invoke(chooseMode)
+                    }
+                )
+            }
         }
-    )
+    }
 }
 
 @Composable

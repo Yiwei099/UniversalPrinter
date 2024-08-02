@@ -3,9 +3,12 @@ package com.eiviayw.universalprinter.ui.print
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -16,8 +19,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -45,8 +50,12 @@ fun StartPrintView(
     var startPosition by remember { mutableStateOf(printer.startPosition) }
     var topPosition by remember { mutableStateOf(printer.topPosition) }
 
-    Column(modifier = modifier.padding(0.dp, 0.dp, 20.dp, 0.dp)) {
+    LazyColumn(modifier = modifier.padding(0.dp, 0.dp, 20.dp, 0.dp)) {
+        item {
             Text(text = printer.name)
+        }
+
+        item {
             OutlinedTextField(
                 modifier = Modifier.padding(0.dp,20.dp,0.dp,0.dp),
                 value = printTime,
@@ -60,7 +69,9 @@ fun StartPrintView(
                     keyboardType = KeyboardType.Number,
                 ),
             )
+        }
 
+        item {
             if (!printer.isEsc()){
                 OutlinedTextField(
                     value = startPosition,
@@ -89,7 +100,9 @@ fun StartPrintView(
                     ),
                 )
             }
+        }
 
+        item {
             StepOption(
                 Modifier.padding(0.dp, 10.dp),
                 stepTitle = "选择纸张尺寸",
@@ -98,7 +111,9 @@ fun StartPrintView(
             ) {
                 viewMode.showPaperListDialog(true)
             }
+        }
 
+        item {
             StepOption(
                 Modifier.padding(0.dp, 10.dp),
                 stepTitle = "选择指令类型",
@@ -107,7 +122,9 @@ fun StartPrintView(
             ) {
                 viewMode.showBuildListDialog(true)
             }
+        }
 
+        item {
             Column {
                 Row(
                     modifier = Modifier
@@ -176,6 +193,7 @@ fun StartPrintView(
                     )
                 }
             }
+        }
     }
 
     if (viewState.showPaperListDialog){
@@ -199,8 +217,7 @@ fun StartPrintView(
         Dialog(onDismissRequest = { viewMode.showPaperListDialog(false) }) {
             PaperSizeDialog(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .fillMaxHeight()
+                    .height((LocalConfiguration.current.screenHeightDp * 0.8f).dp)
                     .padding(50.dp, 20.dp),
                 list = paperList,
                 defaultChooseMode = printer.paperSize,

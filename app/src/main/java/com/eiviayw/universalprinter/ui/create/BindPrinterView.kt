@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
@@ -40,100 +41,124 @@ fun BindPrinterView(
     val viewState = viewModel.viewState.collectAsState().value
     val newPrinter = viewModel.myPrinter.collectAsState().value
 
-    Column(modifier = modifier.padding(0.dp, 0.dp, 20.dp, 0.dp)) {
-        StepOption(
-            Modifier.padding(0.dp, 10.dp),
-            stepTitle = stringResource(R.string.choose_connection_type),
-            stepTips = stringResource(R.string.connection_type),
-            value = newPrinter.connectMode.label
-        ) {
-            viewModel.showConnectModeListDialog(true)
-        }
-
-        StepOption(
-            modifier = Modifier.padding(0.dp, 10.dp),
-            stepTitle = stringResource(R.string.choose_printing_mode),
-            stepTips = stringResource(R.string.printing_mode),
-            value = newPrinter.printerMode.label
-        ) {
-            viewModel.showPrinterModeListDialog(true)
-        }
-
-        StepOption(
-            modifier = Modifier.padding(0.dp, 10.dp),
-            stepTitle = stringResource(R.string.choose_sdk_policy),
-            stepTips = stringResource(R.string.sdk_policy),
-            value = newPrinter.sdkMode.label
-        ) {
-            viewModel.showSDKModeListDialog(true)
-        }
-
-        if (newPrinter.connectMode != ConnectMode.WIFI){
-            val tips = when(newPrinter.connectMode){
-                ConnectMode.BLE -> stringResource(R.string.blue_tooth)
-                else -> stringResource(R.string.usb)
+    LazyColumn(modifier = modifier.padding(0.dp, 0.dp, 20.dp, 0.dp)) {
+        item {
+            StepOption(
+                Modifier.padding(0.dp, 10.dp),
+                stepTitle = stringResource(R.string.choose_connection_type),
+                stepTips = stringResource(R.string.connection_type),
+                value = newPrinter.connectMode.label
+            ) {
+                viewModel.showConnectModeListDialog(true)
             }
+        }
+
+        item {
             StepOption(
                 modifier = Modifier.padding(0.dp, 10.dp),
-                stepTitle = stringResource(R.string.choose_x_device, tips),
-                stepTips = stringResource(R.string.device),
-                value = when (newPrinter.connectMode) {
-                    ConnectMode.BLE -> newPrinter.address
-                    ConnectMode.USB -> newPrinter.usbDevice?.manufacturerName ?: ""
-                    else -> ""
-                }
+                stepTitle = stringResource(R.string.choose_printing_mode),
+                stepTips = stringResource(R.string.printing_mode),
+                value = newPrinter.printerMode.label
             ) {
-                viewModel.showDeviceListDialog(true)
+                viewModel.showPrinterModeListDialog(true)
             }
-        }else{
-            OutlinedTextField(
-                value = newPrinter.address,
-                onValueChange = { newPrinter.address = it },
-                label = { Text(text = stringResource(R.string.device_ip)) },
-                modifier = Modifier.padding(0.dp,20.dp),
-                keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Ascii,
-                ),
-            )
         }
 
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(0.dp, 10.dp),
-            horizontalArrangement = Arrangement.End
-        ) {
-            ComButton(
-                value = stringResource(R.string.save),
-                click = {
-                    if (newPrinter.connectMode == ConnectMode.BLE) {
-                        if (newPrinter.address.isEmpty()) {
-                            Toast.makeText(BaseApplication.getInstance(),BaseApplication.getInstance().getString(R.string.blue_tooth_device_ip_dont_empty), Toast.LENGTH_SHORT).show()
-                            return@ComButton
-                        }
+        item {
+            StepOption(
+                modifier = Modifier.padding(0.dp, 10.dp),
+                stepTitle = stringResource(R.string.choose_sdk_policy),
+                stepTips = stringResource(R.string.sdk_policy),
+                value = newPrinter.sdkMode.label
+            ) {
+                viewModel.showSDKModeListDialog(true)
+            }
+        }
 
-                        viewModel.savePrinter()
-                    }
-
-                    if (newPrinter.connectMode == ConnectMode.WIFI) {
-                        if (newPrinter.address.isEmpty()) {
-                            Toast.makeText(BaseApplication.getInstance(),
-                                BaseApplication.getInstance().getString(R.string.device_ip_dont_empty), Toast.LENGTH_SHORT).show()
-                            return@ComButton
-                        }
-
-                        viewModel.savePrinter()
-                    }
-
-                    if (newPrinter.connectMode == ConnectMode.USB) {
-                        newPrinter.usbDevice?.let {
-                            viewModel.savePrinter()
-                        } ?: { Toast.makeText(BaseApplication.getInstance(),
-                            BaseApplication.getInstance()
-                                .getString(R.string.please_select_a_usb_device), Toast.LENGTH_SHORT).show() }
-                    }
+        item {
+            if (newPrinter.connectMode != ConnectMode.WIFI) {
+                val tips = when (newPrinter.connectMode) {
+                    ConnectMode.BLE -> stringResource(R.string.blue_tooth)
+                    else -> stringResource(R.string.usb)
                 }
-            )
+                StepOption(
+                    modifier = Modifier.padding(0.dp, 10.dp),
+                    stepTitle = stringResource(R.string.choose_x_device, tips),
+                    stepTips = stringResource(R.string.device),
+                    value = when (newPrinter.connectMode) {
+                        ConnectMode.BLE -> newPrinter.address
+                        ConnectMode.USB -> newPrinter.usbDevice?.manufacturerName ?: ""
+                        else -> ""
+                    }
+                ) {
+                    viewModel.showDeviceListDialog(true)
+                }
+            } else {
+                OutlinedTextField(
+                    value = newPrinter.address,
+                    onValueChange = { newPrinter.address = it },
+                    label = { Text(text = stringResource(R.string.device_ip)) },
+                    modifier = Modifier.padding(0.dp, 20.dp),
+                    keyboardOptions = KeyboardOptions(
+                        keyboardType = KeyboardType.Ascii,
+                    ),
+                )
+            }
+        }
+
+        item {
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(0.dp, 10.dp),
+                horizontalArrangement = Arrangement.End
+            ) {
+                ComButton(
+                    value = stringResource(R.string.save),
+                    click = {
+                        if (newPrinter.connectMode == ConnectMode.BLE) {
+                            if (newPrinter.address.isEmpty()) {
+                                Toast.makeText(
+                                    BaseApplication.getInstance(),
+                                    BaseApplication.getInstance()
+                                        .getString(R.string.blue_tooth_device_ip_dont_empty),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                return@ComButton
+                            }
+
+                            viewModel.savePrinter()
+                        }
+
+                        if (newPrinter.connectMode == ConnectMode.WIFI) {
+                            if (newPrinter.address.isEmpty()) {
+                                Toast.makeText(
+                                    BaseApplication.getInstance(),
+                                    BaseApplication.getInstance()
+                                        .getString(R.string.device_ip_dont_empty),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                                return@ComButton
+                            }
+
+                            viewModel.savePrinter()
+                        }
+
+                        if (newPrinter.connectMode == ConnectMode.USB) {
+                            newPrinter.usbDevice?.let {
+                                viewModel.savePrinter()
+                            } ?: {
+                                Toast.makeText(
+                                    BaseApplication.getInstance(),
+                                    BaseApplication.getInstance()
+                                        .getString(R.string.please_select_a_usb_device),
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    }
+                )
+            }
         }
     }
 
@@ -203,10 +228,7 @@ fun BindPrinterView(
             ConnectMode.BLE -> {
                 Dialog(onDismissRequest = { viewModel.showDeviceListDialog(false) }) {
                     BleToothPrinterDialogV1(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .fillMaxHeight()
-                            .padding(50.dp, 20.dp),
+                        modifier = Modifier.padding(50.dp, 20.dp),
                         defaultChooseAddress = newPrinter.address,
                         cancel = {
                             viewModel.showDeviceListDialog(false)
