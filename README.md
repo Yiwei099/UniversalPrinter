@@ -17,5 +17,5 @@
 * 2024-08-02 增加SDK的使用演示(v1.0.0)
 
 
-### 4. 联系我催更
+###  联系我催更
 ![Image Text](https://github.com/Yiwei099/PrintSupport/blob/master/app/src/main/res/drawable/wechat_qr_code.png)

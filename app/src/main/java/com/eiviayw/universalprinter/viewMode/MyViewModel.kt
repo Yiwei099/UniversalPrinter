@@ -117,7 +117,7 @@ class MyViewModel:ViewModel() {
         if (TextUtils.isEmpty(_myPrinter.value.id)){
             _myPrinter.value.apply {
                 id = StringUtils.getInstance().getRandomNum(6)
-                name = "编号：${id}"
+                name = "${id}号打印机"
             }
 
             _myPrinterList.value += listOf(_myPrinter.value)

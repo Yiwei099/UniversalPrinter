@@ -42,13 +42,13 @@ import com.eiviayw.universalprinter.constant.ForWordMode
 import com.eiviayw.universalprinter.constant.PaperMode
 import com.eiviayw.universalprinter.constant.PrinterMode
 import com.eiviayw.universalprinter.constant.SDKMode
-import com.eiviayw.universalprinter.ui.theme.ColorE9E9E9
+import com.eiviayw.libcommon.theme.ColorE9E9E9
 import com.eiviayw.universalprinter.util.BlueToothBroadcastReceiver
 import com.eiviayw.universalprinter.util.BlueToothHelper
 import com.eiviayw.universalprinter.util.UsbBroadcastReceiver
 import com.eiviayw.universalprinter.viewMode.MyViewModel
-import com.eiviayw.universalprinter.views.ChoseOption
-import com.eiviayw.universalprinter.views.ComButton
+import com.eiviayw.libcommon.views.ChoseOption
+import com.eiviayw.libcommon.views.ComButton
 import com.gprinter.command.LabelCommand
 
 @Composable
@@ -295,8 +295,6 @@ fun BleToothPrinterDialogV1(
 
     var address by remember { mutableStateOf(defaultChooseAddress) }
     val dataState = viewModel.bleDevicesSet.collectAsState(initial = emptySet()).value
-
-    val sizeDp = DpSize(LocalConfiguration.current.screenWidthDp.dp, LocalConfiguration.current.screenHeightDp.dp)
 
     Surface(
         modifier = modifier

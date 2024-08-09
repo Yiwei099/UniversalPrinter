@@ -1,9 +1,9 @@
 package com.eiviayw.universalprinter.ui.print
 
+import android.content.Intent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,26 +20,28 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.eiviayw.universalprinter.R
+import com.eiviayw.libcommon.R
 import com.eiviayw.universalprinter.bean.MyPrinter
 import com.eiviayw.universalprinter.constant.PaperMode
 import com.eiviayw.universalprinter.dialog.BuildModeDialog
 import com.eiviayw.universalprinter.dialog.DensityDialog
 import com.eiviayw.universalprinter.dialog.ForWordModeDialog
 import com.eiviayw.universalprinter.dialog.PaperSizeDialog
-import com.eiviayw.universalprinter.ui.theme.Color177FF
-import com.eiviayw.universalprinter.ui.theme.ColorE9E9E9
-import com.eiviayw.universalprinter.ui.theme.ColorFF3434
-import com.eiviayw.universalprinter.ui.theme.OrangeFF870D
+import com.eiviayw.libcommon.theme.Color177FF
+import com.eiviayw.libcommon.theme.ColorCF5EEF
+import com.eiviayw.libcommon.theme.ColorE9E9E9
+import com.eiviayw.libcommon.theme.ColorFF3434
+import com.eiviayw.libcommon.theme.OrangeFF870D
+import com.eiviayw.libdraw.DrawingActivity
 import com.eiviayw.universalprinter.viewMode.MyViewModel
-import com.eiviayw.universalprinter.views.ComButton
-import com.eiviayw.universalprinter.views.StepOption
+import com.eiviayw.libcommon.views.ComButton
+import com.eiviayw.libcommon.views.StepOption
 
 @Composable
 fun StartPrintView(
@@ -51,6 +53,8 @@ fun StartPrintView(
     var printTime by remember { mutableStateOf(printer.times) }
     var startPosition by remember { mutableStateOf(printer.startPosition) }
     var topPosition by remember { mutableStateOf(printer.topPosition) }
+
+    val context = LocalContext.current
 
     LazyColumn(modifier = modifier.padding(0.dp, 0.dp, 20.dp, 0.dp)) {
         item {
@@ -185,6 +189,16 @@ fun StartPrintView(
                         .padding(0.dp, 10.dp),
                     horizontalArrangement = Arrangement.End
                 ) {
+
+//                    ComButton(
+//                        modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
+//                        value = "编辑打印数据源",
+//                        containerColor = ColorCF5EEF,
+//                        click = {
+//                            context.startActivity(Intent(context,DrawingActivity::class.java))
+//                        }
+//                    )
+
                     ComButton(
                         modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
                         value = "缓存销毁",

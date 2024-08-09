@@ -1,22 +1,19 @@
 package com.eiviayw.universalprinter
 
 import android.Manifest
-import android.bluetooth.BluetoothAdapter
-import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.eiviayw.libcommon.theme.UniversalPrinterTheme
 import com.eiviayw.universalprinter.ui.Home
-import com.eiviayw.universalprinter.ui.theme.UniversalPrinterTheme
 import com.eiviayw.universalprinter.util.PermissionUtil
 
 class HomeActivity: ComponentActivity() {

@@ -2,7 +2,6 @@ package com.eiviayw.universalprinter.ui.create
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -24,7 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eiviayw.universalprinter.BaseApplication
-import com.eiviayw.universalprinter.R
+import com.eiviayw.libcommon.R
 import com.eiviayw.universalprinter.constant.ConnectMode
 import com.eiviayw.universalprinter.constant.PrinterMode
 import com.eiviayw.universalprinter.constant.SDKMode
@@ -34,8 +33,8 @@ import com.eiviayw.universalprinter.dialog.PrinterModeDialog
 import com.eiviayw.universalprinter.dialog.SDKModeDialog
 import com.eiviayw.universalprinter.dialog.UsbPrinterDialogV1
 import com.eiviayw.universalprinter.viewMode.MyViewModel
-import com.eiviayw.universalprinter.views.ComButton
-import com.eiviayw.universalprinter.views.StepOption
+import com.eiviayw.libcommon.views.ComButton
+import com.eiviayw.libcommon.views.StepOption
 
 @Composable
 fun BindPrinterView(

@@ -21,9 +21,6 @@ import com.eiviayw.universalprinter.constant.ForWordMode
 import com.eiviayw.universalprinter.constant.PaperMode
 import com.eiviayw.universalprinter.constant.PrinterMode
 import com.eiviayw.universalprinter.constant.SDKMode
-import com.eiviayw.universalprinter.provide.EscDataProvide
-import com.eiviayw.universalprinter.provide.LabelProvide
-import com.gprinter.command.LabelCommand
 import com.gprinter.utils.Command
 
 data class MyPrinter(
@@ -49,7 +46,7 @@ data class MyPrinter(
 ){
 
     private var printSourceData:ByteArray? = null
-    private var bitmapOption:BitmapOption = BitmapOption()
+    private var bitmapOption: BitmapOption = BitmapOption()
 
     private fun build(){
         val usbDevicePass = usbDevice != null
@@ -184,7 +181,7 @@ data class MyPrinter(
                     BitmapOption(startIndentation = getStartPositionFloat(), topIndentation = getTopPositionFloat())
                 }
             }
-            EscDataProvide(bitmapOption).getData()
+            com.eiviayw.libdraw.provide.EscDataProvide(bitmapOption).getData()
         }else{
             bitmapOption = when (paperSize) {
                 PaperMode.TSC_3020 -> BitmapOption(maxWidth = 240, maxHeight = 160, startIndentation = getStartPositionFloat(),topIndentation = getTopPositionFloat())
@@ -194,7 +191,7 @@ data class MyPrinter(
                 PaperMode.TSC_6080 -> BitmapOption(maxWidth = 480, maxHeight = 640, startIndentation = getStartPositionFloat(),topIndentation = getTopPositionFloat())
                 else -> BitmapOption(maxWidth = 320, maxHeight = 240, startIndentation = getStartPositionFloat(), topIndentation = getTopPositionFloat())
             }
-            LabelProvide(bitmapOption).getData()
+            com.eiviayw.libdraw.provide.LabelProvide(bitmapOption).getData()
         }
     }
 
