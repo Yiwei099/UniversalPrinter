@@ -298,7 +298,7 @@ fun BleToothPrinterDialogV1(
 
     Surface(
         modifier = modifier
-            .width((LocalConfiguration.current.screenHeightDp * 0.8f).dp)
+            .width((LocalConfiguration.current.screenWidthDp * 0.8f).dp)
             .height((LocalConfiguration.current.screenHeightDp * 0.8f).dp),
         color = Color.White,
         shape = MaterialTheme.shapes.small

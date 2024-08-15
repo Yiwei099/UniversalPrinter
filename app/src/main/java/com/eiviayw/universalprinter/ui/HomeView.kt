@@ -1,5 +1,6 @@
 package com.eiviayw.universalprinter.ui
 
+import android.content.Intent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
@@ -9,6 +10,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eiviayw.libcommon.R
@@ -20,6 +22,7 @@ import com.eiviayw.libcommon.views.ComItemOption
 import com.eiviayw.libcommon.views.ComTopBar
 import com.eiviayw.libcommon.views.ComVerticalLine
 import com.eiviayw.libcommon.views.EmptyView
+import com.eiviayw.libdraw.DrawingActivity
 
 @Composable
 fun Home(viewModel: MyViewModel = viewModel()) {
@@ -31,18 +34,21 @@ fun Home(viewModel: MyViewModel = viewModel()) {
     val printerList = viewModel.myPrinterList.collectAsState().value
     var thisPrinter by remember { mutableStateOf<MyPrinter?>(null) }
 
+    val context = LocalContext.current
+
     Column {
         ComTopBar(
             title = stringResource(id = R.string.app_name),
             actionTitle = stringResource(if (showBindPrinterView) R.string.cancel else R.string.create),
             onActionClick = {
-                if (showBindPrinterView) {
-                    //关闭绑定设备视图
-                    viewModel.showBindPrinterView(false)
-                } else {
-                    //显示绑定设备视图
-                    viewModel.showBindPrinterView(true)
-                }
+                context.startActivity(Intent(context, DrawingActivity::class.java))
+//                if (showBindPrinterView) {
+//                    //关闭绑定设备视图
+//                    viewModel.showBindPrinterView(false)
+//                } else {
+//                    //显示绑定设备视图
+//                    viewModel.showBindPrinterView(true)
+//                }
             }
         )
         Row {

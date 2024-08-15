@@ -6,7 +6,7 @@ import android.text.TextUtils
 import androidx.lifecycle.ViewModel
 import com.eiviayw.universalprinter.bean.MyPrinter
 import com.eiviayw.universalprinter.bean.state.ViewState
-import com.eiviayw.universalprinter.util.StringUtils
+import com.eiviayw.libcommon.utils.StringUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

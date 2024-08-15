@@ -16,9 +16,9 @@ import com.eiviayw.libcommon.theme.GrayE3E3E3
  * 横线
  */
 @Composable
-fun ComLine() {
+fun ComLine(modifier: Modifier = Modifier) {
     Box(
-        modifier = Modifier
+        modifier = modifier
             .fillMaxWidth()
             .height(0.5.dp)
             .border(width = 0.5.dp, color = GrayE3E3E3)

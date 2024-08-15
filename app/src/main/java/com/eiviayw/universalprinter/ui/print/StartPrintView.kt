@@ -190,14 +190,14 @@ fun StartPrintView(
                     horizontalArrangement = Arrangement.End
                 ) {
 
-//                    ComButton(
-//                        modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
-//                        value = "编辑打印数据源",
-//                        containerColor = ColorCF5EEF,
-//                        click = {
-//                            context.startActivity(Intent(context,DrawingActivity::class.java))
-//                        }
-//                    )
+                    ComButton(
+                        modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
+                        value = "编辑打印数据源",
+                        containerColor = ColorCF5EEF,
+                        click = {
+                            context.startActivity(Intent(context,DrawingActivity::class.java))
+                        }
+                    )
 
                     ComButton(
                         modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),

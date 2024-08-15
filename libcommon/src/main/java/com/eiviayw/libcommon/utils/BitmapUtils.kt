@@ -1,4 +1,4 @@
-package com.eiviayw.universalprinter.util
+package com.eiviayw.libcommon.utils
 
 import android.graphics.Bitmap
 
