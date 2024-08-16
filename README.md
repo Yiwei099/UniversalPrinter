@@ -2,7 +2,6 @@
 
 ## 概要
 * 本App演示了[PrintSupport Library](https://github.com/Yiwei099/PrintSupport) 和 [DrawingSupport Library](https://github.com/Yiwei099/DrawingSupport) 的使用，可以创建，连接，打印 各种类型(品牌)的小票，标签打印机  
-* 本App以 kotlin + compose + 组件化 为结果的技术栈
 * 安装后可以在 AndroidStudio 的 LogCat 中查看日志信息
 
 ## 预览
