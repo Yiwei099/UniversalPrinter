@@ -1,4 +1,4 @@
-# PrintSupport Library 的 演示App
+# PrintSupport Library 和 DrawingSupport Library 的 演示App
 
 ## 概要
 * 本App演示了[PrintSupport Library](https://github.com/Yiwei099/PrintSupport) 和 [DrawingSupport Library](https://github.com/Yiwei099/DrawingSupport) 的使用，可以创建，连接，打印 各种类型(品牌)的小票，标签打印机  
