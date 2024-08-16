@@ -6,15 +6,16 @@
 > 安装后可以在 AndroidStudio 的 LogCat 中查看日志信息
 
 ## 预览
-![ImageText](https://github.com/Yiwei099/UniversalPrinter/blob/master/app/src/main/res/mipmap-hdpi/create_printer.jpg)
-![ImageText](https://github.com/Yiwei099/UniversalPrinter/blob/master/app/src/main/res/mipmap-hdpi/esc_printer.jpg)
-![ImageText](https://github.com/Yiwei099/UniversalPrinter/blob/master/app/src/main/res/mipmap-hdpi/tsc_printer.jpg)
+![ImageText](https://github.com/Yiwei099/UniversalPrinter/blob/master/libcommon/src/main/res/mipmap-hdpi/create_printer.jpg)
+![ImageText](https://github.com/Yiwei099/UniversalPrinter/blob/master/libcommon/src/main/res/mipmap-hdpi/esc_printer.jpg)
+![ImageText](https://github.com/Yiwei099/UniversalPrinter/blob/master/libcommon/src/main/res/mipmap-hdpi/tsc_printer.jpg)
 
 ## 下载方式
-![ImageText](https://github.com/Yiwei099/UniversalPrinter/blob/master/app/src/main/res/mipmap-hdpi/download.png)
+![ImageText](https://github.com/Yiwei099/UniversalPrinter/blob/master/libcommon/src/main/res/mipmap-hdpi/download.png)
 
 ## 更新日志
 * 2024-08-02 增加SDK的使用演示(v1.0.0)
+* 2024-08-16 增加编辑打印数据源(图像类型)功能(v1.1.0)
 
 
 ###  联系我催更
