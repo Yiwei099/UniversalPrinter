@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
@@ -212,71 +213,85 @@ fun DrawingHome(
             }
         }
 
-        Row(
+        LazyRow(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(10.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
-            ComButton(
-                value = stringResource(id = R.string.auto_add_single_text_element),
-                containerColor = Color177FF,
-                click = {
-                    viewModel.addParam(DefaultDrawItemParam.getInstance().getSingleTextParam())
-                }
-            )
+            item {
+                ComButton(
+                    value = stringResource(id = R.string.auto_add_single_text_element),
+                    containerColor = Color177FF,
+                    click = {
+                        viewModel.addParam(DefaultDrawItemParam.getInstance().getSingleTextParam())
+                    }
+                )
+            }
 
-            ComButton(
-                value = stringResource(id = R.string.auto_add_double_text_element),
-                containerColor = Color177FF,
-                click = {
-                    viewModel.addParam(DefaultDrawItemParam.getInstance().getPairTextParam())
-                }
-            )
+            item {
+                ComButton(
+                    value = stringResource(id = R.string.auto_add_double_text_element),
+                    containerColor = Color177FF,
+                    click = {
+                        viewModel.addParam(DefaultDrawItemParam.getInstance().getPairTextParam())
+                    }
+                )
+            }
 
-            ComButton(
-                value = stringResource(id = R.string.auto_add_tripe_element),
-                containerColor = Color177FF,
-                click = {
-                    viewModel.addParam(DefaultDrawItemParam.getInstance().getTripleTextParam())
-                }
-            )
+            item {
+                ComButton(
+                    value = stringResource(id = R.string.auto_add_tripe_element),
+                    containerColor = Color177FF,
+                    click = {
+                        viewModel.addParam(DefaultDrawItemParam.getInstance().getTripleTextParam())
+                    }
+                )
+            }
 
-            ComButton(
-                value = stringResource(id = R.string.auto_add_dash_line_element),
-                containerColor = Color177FF,
-                click = {
-                    viewModel.addParam(DefaultDrawItemParam.getInstance().getDashLineParam())
-                }
-            )
+            item {
+                ComButton(
+                    value = stringResource(id = R.string.auto_add_dash_line_element),
+                    containerColor = Color177FF,
+                    click = {
+                        viewModel.addParam(DefaultDrawItemParam.getInstance().getDashLineParam())
+                    }
+                )
+            }
 
-            ComButton(
-                value = stringResource(id = R.string.auto_add_line_element),
-                containerColor = Color177FF,
-                click = {
-                    viewModel.addParam(DefaultDrawItemParam.getInstance().getLineParam())
-                }
-            )
+            item {
+                ComButton(
+                    value = stringResource(id = R.string.auto_add_line_element),
+                    containerColor = Color177FF,
+                    click = {
+                        viewModel.addParam(DefaultDrawItemParam.getInstance().getLineParam())
+                    }
+                )
+            }
 
-            ComButton(
-                value = stringResource(id = R.string.cancel),
-                containerColor = ColorE9E9E9,
-                click = {
-                    closeActivity = true
-                }
-            )
-
-            ComButton(
-                value = stringResource(id = R.string.save),
-                containerColor = OrangeFF870D,
-                click = {
-                    viewModel.getResultData()?.let {
-                        WeakDataHolder.getInstance().saveData(WeakDataHolder.RESULT_DATA, it)
-                        resultOk = true
+            item {
+                ComButton(
+                    value = stringResource(id = R.string.cancel),
+                    containerColor = ColorE9E9E9,
+                    click = {
                         closeActivity = true
                     }
-                }
-            )
+                )
+            }
+
+            item {
+                ComButton(
+                    value = stringResource(id = R.string.save),
+                    containerColor = OrangeFF870D,
+                    click = {
+                        viewModel.getResultData()?.let {
+                            WeakDataHolder.getInstance().saveData(WeakDataHolder.RESULT_DATA, it)
+                            resultOk = true
+                            closeActivity = true
+                        }
+                    }
+                )
+            }
         }
     }
 
