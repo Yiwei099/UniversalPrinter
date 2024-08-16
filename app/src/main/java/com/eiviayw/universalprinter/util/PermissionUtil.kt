@@ -4,10 +4,9 @@ import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
 import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.eiviayw.universalprinter.BaseApplication
+import com.eiviayw.libcommon.BaseApplication
 
 class PermissionUtil private constructor() {
     companion object {

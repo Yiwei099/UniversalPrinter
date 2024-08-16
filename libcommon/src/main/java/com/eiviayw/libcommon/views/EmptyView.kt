@@ -15,7 +15,9 @@ import com.eiviayw.libcommon.theme.Black141414
  * @param tips 提示内容
  */
 @Composable
-fun EmptyView(tips:String){
+fun EmptyView(
+    tips:String
+){
     Box(
         modifier = Modifier.fillMaxSize()
     ){
@@ -26,5 +28,27 @@ fun EmptyView(tips:String){
            color = Black141414,
            textAlign = TextAlign.Center
        )
+    }
+}
+
+/**
+ * 空提示视图
+ * @param tips 提示内容
+ */
+@Composable
+fun EmptyViewV1(
+    modifier: Modifier = Modifier,
+    tips:String
+){
+    Box(
+        modifier = modifier
+    ){
+        Text(
+            text = tips,
+            modifier = Modifier.align(Alignment.Center),
+            fontSize = 14.sp,
+            color = Black141414,
+            textAlign = TextAlign.Center
+        )
     }
 }

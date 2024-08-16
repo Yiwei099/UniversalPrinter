@@ -5,4 +5,5 @@ data class DrawViewState(
     val showBitmapOptionView:Boolean = false,
     val showSingleTextDialog: Boolean = false,
     val showMultiElementDialog: Boolean = false,
+    val showLineElementDialog:Boolean = false,
 )

@@ -1,4 +1,4 @@
-package com.eiviayw.universalprinter
+package com.eiviayw.libcommon
 
 import android.app.Application
 

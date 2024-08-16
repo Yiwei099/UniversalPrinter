@@ -13,7 +13,7 @@ import com.eiviayw.print.gprinter.TscBtGPrinter
 import com.eiviayw.print.gprinter.TscNetGPrinter
 import com.eiviayw.print.gprinter.TscUsbGPrinter
 import com.eiviayw.print.native.NativeUsbPrinter
-import com.eiviayw.universalprinter.BaseApplication
+import com.eiviayw.libcommon.BaseApplication
 import com.eiviayw.universalprinter.constant.BuildMode
 import com.eiviayw.universalprinter.constant.ConnectMode
 import com.eiviayw.universalprinter.constant.DensityMode
@@ -51,7 +51,6 @@ data class MyPrinter(
     private fun build(){
         val usbDevicePass = usbDevice != null
         val addressPass = !TextUtils.isEmpty(address)
-        buildPrintData()
         if (isNativeUsb() && usbDevicePass){
             //原生Usb
             supportPrinter = NativeUsbPrinter(
@@ -156,7 +155,7 @@ data class MyPrinter(
         supportPrinter?.let {
             it.addMission(GraphicMission(printSourceData!!, forward = forWordMode.value,selfAdaptionHeight = paperSize == PaperMode.NONE).apply {
                 count = times.toInt()
-                countByOne = false
+                countByOne = true
                 if (!isEsc()){
                     //佳博标签传值单位是 mm 必须除以8
                     bitmapWidth = bitmapOption.maxWidth / 8
@@ -165,33 +164,6 @@ data class MyPrinter(
             })
         } ?: {
             Log.d(BaseApplication.TAG, "打印机实例已被销毁")
-        }
-    }
-
-    private fun buildPrintData(){
-        printSourceData = if (isEsc()){
-            bitmapOption = when (paperSize) {
-                PaperMode.ESC_58 -> {
-                    BitmapOption(maxWidth = 384, startIndentation = getStartPositionFloat(), topIndentation = getTopPositionFloat())
-                }
-                PaperMode.ESC_80 -> {
-                    BitmapOption(startIndentation = getStartPositionFloat(), topIndentation = getTopPositionFloat())
-                }
-                else -> {
-                    BitmapOption(startIndentation = getStartPositionFloat(), topIndentation = getTopPositionFloat())
-                }
-            }
-            com.eiviayw.libdraw.provide.EscDataProvide(bitmapOption).getData()
-        }else{
-            bitmapOption = when (paperSize) {
-                PaperMode.TSC_3020 -> BitmapOption(maxWidth = 240, maxHeight = 160, startIndentation = getStartPositionFloat(),topIndentation = getTopPositionFloat())
-                PaperMode.TSC_4060 -> BitmapOption(maxWidth = 320, maxHeight = 480, startIndentation = getStartPositionFloat(),topIndentation = getTopPositionFloat())
-                PaperMode.TSC_4080 -> BitmapOption(maxWidth = 320, maxHeight = 640, startIndentation = getStartPositionFloat(),topIndentation = getTopPositionFloat())
-                PaperMode.TSC_6040 -> BitmapOption(maxWidth = 480, maxHeight = 320, startIndentation = getStartPositionFloat(),topIndentation = getTopPositionFloat())
-                PaperMode.TSC_6080 -> BitmapOption(maxWidth = 480, maxHeight = 640, startIndentation = getStartPositionFloat(),topIndentation = getTopPositionFloat())
-                else -> BitmapOption(maxWidth = 320, maxHeight = 240, startIndentation = getStartPositionFloat(), topIndentation = getTopPositionFloat())
-            }
-            com.eiviayw.libdraw.provide.LabelProvide(bitmapOption).getData()
         }
     }
 
@@ -212,8 +184,29 @@ data class MyPrinter(
 
         return printerMode == PrinterMode.ESC || nativeEsc
     }
+
+    fun notifyPrinterData(dataSource:ByteArray,option: BitmapOption){
+        Log.d("StartPrintView", "StartPrintView: 数据回来啦")
+        printSourceData = dataSource
+        bitmapOption = option
+        markDataChange()
+    }
+
     fun isUsb() = connectMode == ConnectMode.USB
     fun isGPrinter() = sdkMode == SDKMode.GPrinter
     fun isNativeUsb() = sdkMode == SDKMode.NativeUsb
     fun isBt() = connectMode == ConnectMode.BLE
+    fun printDataIsNotEmpty() = printSourceData != null
+    fun getBitmapOption():BitmapOption {
+        bitmapOption = BitmapOption(
+            maxWidth = paperSize.width,
+            maxHeight = paperSize.heigth,
+            startIndentation = if (isEsc()) bitmapOption.startIndentation else getStartPositionFloat(),
+            topIndentation = if (isEsc()) bitmapOption.topIndentation else getTopPositionFloat(),
+            endIndentation = bitmapOption.endIndentation,
+            antiAlias = bitmapOption.antiAlias,
+            followEffectItem = bitmapOption.followEffectItem
+        )
+        return bitmapOption
+    }
 }

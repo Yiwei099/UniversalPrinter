@@ -7,7 +7,7 @@ import android.content.Intent
 import android.content.IntentFilter
 import android.os.Build
 import android.util.Log
-import com.eiviayw.universalprinter.BaseApplication
+import com.eiviayw.libcommon.BaseApplication
 
 class BlueToothBroadcastReceiver(
     private var listener: ((BluetoothDevice) -> Unit)

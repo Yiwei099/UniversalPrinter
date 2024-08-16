@@ -45,7 +45,7 @@ class EscDataProvide(
                 MultiElementParam(
                     param1 = TextParam(
                         text = it.goodsName,
-                        weight = 0.6,
+                        weight = 0.5,
                     ).apply {
                         size = 26f
                         typeface = Typeface.DEFAULT_BOLD
@@ -53,14 +53,14 @@ class EscDataProvide(
                     param2 = TextParam(
                         text = "${it.qua}x${it.price}",
                         align = Constant.Companion.Align.ALIGN_END,
-                        weight = 0.2,
+                        weight = 0.3,
                     ).apply {
                         size = 26f
                     },
                     param3 = TextParam(
                         text = it.totalPrice,
                         align = Constant.Companion.Align.ALIGN_END,
-                        weight = 0.2,
+                        weight = 0.3,
                     ).apply {
                         size = 26f
                         typeface = Typeface.DEFAULT_BOLD

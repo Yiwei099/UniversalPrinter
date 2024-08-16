@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
 import androidx.core.app.ActivityCompat
-import com.eiviayw.universalprinter.BaseApplication
+import com.eiviayw.libcommon.BaseApplication
 
 
 class BlueToothHelper private constructor() {

@@ -1,6 +1,11 @@
 package com.eiviayw.universalprinter.ui.print
 
+import android.app.Activity
 import android.content.Intent
+import android.util.Log
+import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -38,10 +43,12 @@ import com.eiviayw.libcommon.theme.ColorCF5EEF
 import com.eiviayw.libcommon.theme.ColorE9E9E9
 import com.eiviayw.libcommon.theme.ColorFF3434
 import com.eiviayw.libcommon.theme.OrangeFF870D
+import com.eiviayw.libcommon.utils.WeakDataHolder
 import com.eiviayw.libdraw.DrawingActivity
 import com.eiviayw.universalprinter.viewMode.MyViewModel
 import com.eiviayw.libcommon.views.ComButton
 import com.eiviayw.libcommon.views.StepOption
+import com.eiviayw.library.draw.BitmapOption
 
 @Composable
 fun StartPrintView(
@@ -55,6 +62,16 @@ fun StartPrintView(
     var topPosition by remember { mutableStateOf(printer.topPosition) }
 
     val context = LocalContext.current
+
+    val launcher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            WeakDataHolder.getInstance().getData<Pair<ByteArray,BitmapOption>?>(WeakDataHolder.RESULT_DATA,null)?.let {
+                printer.notifyPrinterData(it.first,it.second)
+            }
+        }
+    }
 
     LazyColumn(modifier = modifier.padding(0.dp, 0.dp, 20.dp, 0.dp)) {
         item {
@@ -195,7 +212,8 @@ fun StartPrintView(
                         value = "编辑打印数据源",
                         containerColor = ColorCF5EEF,
                         click = {
-                            context.startActivity(Intent(context,DrawingActivity::class.java))
+                            WeakDataHolder.getInstance().saveData(WeakDataHolder.DATA,printer.getBitmapOption())
+                            launcher.launch(Intent(context,DrawingActivity::class.java))
                         }
                     )
 
@@ -212,7 +230,12 @@ fun StartPrintView(
                         modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
                         value = "打印(${printTime})",
                         click = {
-                            printer.startPrint()
+                            if (printer.printDataIsNotEmpty()){
+                                printer.startPrint()
+                                return@ComButton
+                            }
+
+                            Toast.makeText(context, "请先编辑打印数据源", Toast.LENGTH_SHORT).show()
                         }
                     )
                 }

@@ -20,6 +20,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -46,6 +47,8 @@ import com.eiviayw.libdraw.constant.TextAlignType
 import com.eiviayw.libdraw.constant.TextTypeFace
 import com.eiviayw.libdraw.utils.DrawLibUtils
 import com.eiviayw.library.bean.param.BaseParam
+import com.eiviayw.library.bean.param.LineDashedParam
+import com.eiviayw.library.bean.param.LineParam
 import com.eiviayw.library.bean.param.MultiElementParam
 import com.eiviayw.library.bean.param.TextParam
 import com.eiviayw.library.draw.BitmapOption
@@ -55,11 +58,13 @@ fun ModifySingleTextDialog(
     modifier: Modifier = Modifier,
     onCancel: () -> Unit = {},
     onConfirm: (BaseParam) -> Unit = {},
+    autoWidth: Boolean = true
 ) {
     var textAlignDialog by remember { mutableStateOf(false) }
     var textFaceDialog by remember { mutableStateOf(false) }
     var autoWarp by remember { mutableStateOf(true) }
 
+    var widthWeight by remember { mutableStateOf("1") }
     var paramText by remember { mutableStateOf("") }
     var textSize by remember { mutableStateOf("26") }
     var textAlign by remember { mutableStateOf(TextAlignType.ALIGN_START) }
@@ -90,14 +95,49 @@ fun ModifySingleTextDialog(
                     modifier = Modifier.height(sizeDp.height * 0.7f)
                 ) {
                     item {
-                        OutlinedTextField(
-                            value = paramText,
-                            onValueChange = {
-                                paramText = it
-                            },
-                            label = { Text(text = "文本内容") },
-                            modifier = Modifier.padding(0.dp, 20.dp)
-                        )
+                        if (autoWidth) {
+                            OutlinedTextField(
+                                value = paramText,
+                                onValueChange = {
+                                    paramText = it
+                                },
+                                label = { Text(text = "文本内容") },
+                                modifier = Modifier.padding(0.dp, 20.dp)
+                            )
+                        } else {
+                            Row {
+                                OutlinedTextField(
+                                    value = paramText,
+                                    onValueChange = {
+                                        paramText = it
+                                    },
+                                    label = { Text(text = "文本内容") },
+                                    modifier = Modifier
+                                        .padding(0.dp, 20.dp)
+                                        .weight(0.5f)
+                                )
+
+                                Text(
+                                    modifier = Modifier.weight(0.3f),
+                                    text = ""
+                                )
+
+                                OutlinedTextField(
+                                    value = widthWeight,
+                                    onValueChange = {
+                                        widthWeight = it
+                                    },
+                                    label = { Text(text = "宽度占比") },
+                                    modifier = Modifier
+                                        .padding(0.dp, 20.dp)
+                                        .weight(0.5f),
+                                    keyboardOptions = KeyboardOptions(
+                                        keyboardType = KeyboardType.Decimal
+                                    )
+                                )
+                            }
+                        }
+
                     }
 
                     item {
@@ -189,7 +229,8 @@ fun ModifySingleTextDialog(
                             onConfirm.invoke(TextParam(
                                 text = paramText,
                                 align = textAlign.index,
-                                autoWrap = autoWarp
+                                autoWrap = autoWarp,
+                                weight = if (TextUtils.isEmpty(widthWeight)) 1.0 else widthWeight.toDouble()
                             ).apply {
                                 size = textSize.toFloat()
                                 typeface = textFace.face
@@ -302,15 +343,15 @@ fun ModifyMultiTextDialog(
                         value = "确定",
                         click = {
                             val size = elementList.size
-                            if (size < 1){
+                            if (size < 1) {
                                 cancel.invoke()
                                 return@ComButton
                             }
                             confirm.invoke(
                                 MultiElementParam(
                                     param1 = elementList[0],
-                                    param2 = if (1 < size - 1) elementList[1] else BaseParam(),
-                                    param3 = if (2 < size - 1) elementList[2] else BaseParam(),
+                                    param2 = if (1 <= size - 1) elementList[1] else BaseParam(),
+                                    param3 = if (2 <= size - 1) elementList[2] else BaseParam(),
                                 )
                             )
                         }
@@ -328,6 +369,7 @@ fun ModifyMultiTextDialog(
 
             if (showModifyItemDialog) {
                 ModifySingleTextDialog(
+                    autoWidth = false,
                     onCancel = {
                         showModifyItemDialog = false
                     },
@@ -606,6 +648,65 @@ fun BitmapOptionView(
                                     antiAlias = openAlias,
                                     followEffectItem = followEffectItem
                                 )
+                            )
+                        }
+                    )
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun ModifyLineDialog(
+    modifier: Modifier = Modifier,
+    onCancel: () -> Unit,
+    confirm: (BaseParam) -> Unit
+){
+
+    var isDishLine by remember { mutableStateOf(true) }
+
+    Dialog(onDismissRequest = { onCancel.invoke() }) {
+        Surface(
+            modifier = modifier.wrapContentHeight(),
+            color = Color.White,
+            shape = MaterialTheme.shapes.small
+        ) {
+            Column(
+                modifier = Modifier.padding(10.dp, 0.dp)
+            ) {
+                Text(
+                    text = "编辑线条元素",
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp, 6.dp),
+                    textAlign = TextAlign.Center
+                )
+
+                ChoseOption(title = "线条为虚线", chooseState = isDishLine){
+                    isDishLine = !isDishLine
+                }
+
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(0.dp, 10.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    ComButton(
+                        value = "取消",
+                        containerColor = ColorE9E9E9,
+                        click = onCancel
+                    )
+                    ComButton(
+                        value = "确定",
+                        click = {
+                            confirm.invoke(
+                                if (isDishLine){
+                                    LineDashedParam()
+                                }else{
+                                    LineParam()
+                                }
                             )
                         }
                     )

@@ -6,14 +6,12 @@ import android.content.Intent
 import android.hardware.usb.UsbDevice
 import android.hardware.usb.UsbManager
 import android.os.Build
-import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyColumn
@@ -34,7 +32,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import com.eiviayw.universalprinter.BaseApplication
+import com.eiviayw.libcommon.BaseApplication
 import com.eiviayw.universalprinter.constant.BuildMode
 import com.eiviayw.universalprinter.constant.ConnectMode
 import com.eiviayw.universalprinter.constant.DensityMode
@@ -49,7 +47,6 @@ import com.eiviayw.universalprinter.util.UsbBroadcastReceiver
 import com.eiviayw.universalprinter.viewMode.MyViewModel
 import com.eiviayw.libcommon.views.ChoseOption
 import com.eiviayw.libcommon.views.ComButton
-import com.gprinter.command.LabelCommand
 
 @Composable
 fun ConnectModeDialog(

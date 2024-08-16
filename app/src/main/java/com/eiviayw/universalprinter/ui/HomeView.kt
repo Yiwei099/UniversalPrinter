@@ -34,21 +34,18 @@ fun Home(viewModel: MyViewModel = viewModel()) {
     val printerList = viewModel.myPrinterList.collectAsState().value
     var thisPrinter by remember { mutableStateOf<MyPrinter?>(null) }
 
-    val context = LocalContext.current
-
     Column {
         ComTopBar(
             title = stringResource(id = R.string.app_name),
             actionTitle = stringResource(if (showBindPrinterView) R.string.cancel else R.string.create),
             onActionClick = {
-                context.startActivity(Intent(context, DrawingActivity::class.java))
-//                if (showBindPrinterView) {
-//                    //关闭绑定设备视图
-//                    viewModel.showBindPrinterView(false)
-//                } else {
-//                    //显示绑定设备视图
-//                    viewModel.showBindPrinterView(true)
-//                }
+                if (showBindPrinterView) {
+                    //关闭绑定设备视图
+                    viewModel.showBindPrinterView(false)
+                } else {
+                    //显示绑定设备视图
+                    viewModel.showBindPrinterView(true)
+                }
             }
         )
         Row {
