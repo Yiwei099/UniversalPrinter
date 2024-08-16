@@ -1,5 +1,6 @@
 package com.eiviayw.libdraw.ui
 
+import android.graphics.Paint
 import android.text.TextUtils
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,8 +21,6 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableFloatStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -29,11 +28,11 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.eiviayw.libcommon.R
@@ -84,7 +83,7 @@ fun ModifySingleTextDialog(
                 modifier = Modifier.padding(10.dp, 0.dp)
             ) {
                 Text(
-                    text = "编辑文本元素",
+                    text = stringResource(id = R.string.modify_text_element),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(0.dp, 6.dp),
@@ -101,7 +100,7 @@ fun ModifySingleTextDialog(
                                 onValueChange = {
                                     paramText = it
                                 },
-                                label = { Text(text = "文本内容") },
+                                label = { Text(text = stringResource(id = R.string.text_content)) },
                                 modifier = Modifier.padding(0.dp, 20.dp)
                             )
                         } else {
@@ -111,7 +110,7 @@ fun ModifySingleTextDialog(
                                     onValueChange = {
                                         paramText = it
                                     },
-                                    label = { Text(text = "文本内容") },
+                                    label = { Text(text = stringResource(id = R.string.text_content)) },
                                     modifier = Modifier
                                         .padding(0.dp, 20.dp)
                                         .weight(0.5f)
@@ -127,7 +126,7 @@ fun ModifySingleTextDialog(
                                     onValueChange = {
                                         widthWeight = it
                                     },
-                                    label = { Text(text = "宽度占比") },
+                                    label = { Text(text = stringResource(id = R.string.width_weight)) },
                                     modifier = Modifier
                                         .padding(0.dp, 20.dp)
                                         .weight(0.5f),
@@ -146,7 +145,7 @@ fun ModifySingleTextDialog(
                         ) {
                             Text(
                                 modifier = Modifier.weight(1f),
-                                text = "文本大小",
+                                text = stringResource(id = R.string.text_size),
                                 fontSize = 14.sp,
                             )
                             Icon(
@@ -160,7 +159,7 @@ fun ModifySingleTextDialog(
                                         }
                                     },
                                 painter = painterResource(id = R.mipmap.sub),
-                                contentDescription = "减",
+                                contentDescription = stringResource(id = R.string.sub),
                             )
                             Text(
                                 modifier = Modifier.padding(20.dp, 0.dp),
@@ -176,7 +175,7 @@ fun ModifySingleTextDialog(
                                         textSize = (textSize.toInt() + 2).toString()
                                     },
                                 painter = painterResource(id = R.mipmap.plus),
-                                contentDescription = "加"
+                                contentDescription = stringResource(id = R.string.add_v1)
                             )
                         }
                         ComLine(
@@ -186,7 +185,7 @@ fun ModifySingleTextDialog(
 
                     item {
                         ComItemOption(
-                            title = "对齐方式",
+                            title = stringResource(id = R.string.align_type),
                             value = DrawLibUtils.getInstance().getTextAlignName(textAlign.index)
                         ) {
                             textAlignDialog = true
@@ -195,7 +194,7 @@ fun ModifySingleTextDialog(
 
                     item {
                         ComItemOption(
-                            title = "文本样式",
+                            title = stringResource(id = R.string.text_style),
                             value = textFace.label
                         ) {
                             textFaceDialog = true
@@ -204,7 +203,7 @@ fun ModifySingleTextDialog(
 
                     item {
                         ChoseOption(
-                            title = "自适应换行",
+                            title = stringResource(id = R.string.auto_warp),
                             chooseState = autoWarp
                         ) {
                             autoWarp = !autoWarp
@@ -219,12 +218,12 @@ fun ModifySingleTextDialog(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     ComButton(
-                        value = "取消",
+                        value = stringResource(id = R.string.cancel_v1),
                         containerColor = ColorE9E9E9,
                         click = { onCancel.invoke() }
                     )
                     ComButton(
-                        value = "确定",
+                        value = stringResource(id = R.string.confirm),
                         click = {
                             onConfirm.invoke(TextParam(
                                 text = paramText,
@@ -307,7 +306,7 @@ fun ModifyMultiTextDialog(
                 modifier = Modifier.padding(10.dp, 0.dp)
             ) {
                 Text(
-                    text = "编辑混排元素",
+                    text = stringResource(id = R.string.modify_multi_element),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(0.dp, 6.dp),
@@ -320,7 +319,7 @@ fun ModifyMultiTextDialog(
                     items(elementList) { item ->
                         when (item) {
                             is TextParam -> {
-                                ComItemOption(title = "文本元素", value = item.text)
+                                ComItemOption(title = stringResource(id = R.string.text_element), value = item.text)
                             }
                         }
                     }
@@ -333,14 +332,14 @@ fun ModifyMultiTextDialog(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     ComButton(
-                        value = "取消",
+                        value = stringResource(id = R.string.cancel_v1),
                         containerColor = ColorE9E9E9,
                         click = { cancel.invoke() }
                     )
 
 
                     ComButton(
-                        value = "确定",
+                        value = stringResource(id = R.string.confirm),
                         click = {
                             val size = elementList.size
                             if (size < 1) {
@@ -359,7 +358,7 @@ fun ModifyMultiTextDialog(
 
                     if (elementList.size < 3) {
                         ComButton(
-                            value = "添加",
+                            value = stringResource(id = R.string.add),
                             containerColor = ColorCF5EEF,
                             click = { showModifyItemDialog = true }
                         )
@@ -399,7 +398,7 @@ fun TextAlignDialog(
     ) {
         Column {
             Text(
-                text = "选择对齐方式",
+                text = stringResource(id = R.string.choose_align_type),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(0.dp, 6.dp),
@@ -429,12 +428,12 @@ fun TextAlignDialog(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 ComButton(
-                    value = "取消",
+                    value = stringResource(id = R.string.cancel_v1),
                     containerColor = ColorE9E9E9,
                     click = cancel
                 )
                 ComButton(
-                    value = "确定",
+                    value = stringResource(id = R.string.confirm),
                     click = {
                         confirm.invoke(chooseMode)
                     }
@@ -461,7 +460,7 @@ fun TextTypeFaceDialog(
         ) {
             Column {
                 Text(
-                    text = "选择文本样式",
+                    text = stringResource(id = R.string.choose_text_style),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(0.dp, 6.dp),
@@ -490,12 +489,12 @@ fun TextTypeFaceDialog(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     ComButton(
-                        value = "取消",
+                        value = stringResource(id = R.string.cancel_v1),
                         containerColor = ColorE9E9E9,
                         click = cancel
                     )
                     ComButton(
-                        value = "确定",
+                        value = stringResource(id = R.string.confirm),
                         click = {
                             confirm.invoke(chooseMode)
                         }
@@ -535,7 +534,7 @@ fun BitmapOptionView(
                 modifier = Modifier.padding(10.dp, 0.dp)
             ) {
                 Text(
-                    text = "配置图像参数",
+                    text = stringResource(id = R.string.bitmap_option_set),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(0.dp, 6.dp),
@@ -549,7 +548,7 @@ fun BitmapOptionView(
                                 onValueChange = {
                                     maxWidth = it
                                 },
-                                label = { Text(text = "图像最大宽度") },
+                                label = { Text(text = stringResource(id = R.string.bitmap_max_width)) },
                                 modifier = Modifier
                                     .padding(0.dp, 20.dp)
                                     .weight(0.5f),
@@ -566,7 +565,7 @@ fun BitmapOptionView(
                                 onValueChange = {
                                     maxHeight = it
                                 },
-                                label = { Text(text = "图像最大高度") },
+                                label = { Text(text = stringResource(id = R.string.bitmap_max_height)) },
                                 modifier = Modifier
                                     .padding(0.dp, 20.dp)
                                     .weight(0.5f),
@@ -584,7 +583,7 @@ fun BitmapOptionView(
                                 onValueChange = {
                                     startIndentation = it
                                 },
-                                label = { Text(text = "开始方向边距") },
+                                label = { Text(text = stringResource(id = R.string.start_indentation)) },
                                 modifier = Modifier
                                     .padding(0.dp, 20.dp)
                                     .weight(0.5f),
@@ -601,7 +600,7 @@ fun BitmapOptionView(
                                 onValueChange = {
                                     endIndentation = it
                                 },
-                                label = { Text(text = "结束方向边距") },
+                                label = { Text(text = stringResource(id = R.string.end_indentation)) },
                                 modifier = Modifier
                                     .padding(0.dp, 20.dp)
                                     .weight(0.5f),
@@ -611,13 +610,13 @@ fun BitmapOptionView(
                     }
 
                     item {
-                        ChoseOption(title = "开启抗锯齿", chooseState = openAlias) {
+                        ChoseOption(title = stringResource(id = R.string.open_alias), chooseState = openAlias) {
                             openAlias = !openAlias
                         }
                     }
                     item {
                         ChoseOption(
-                            title = "固定高度后剩余高度不足时终止绘制(不固定不生效)",
+                            title = stringResource(id = R.string.followEffectItem_tips),
                             chooseState = followEffectItem
                         ) {
                             followEffectItem = !followEffectItem
@@ -632,12 +631,12 @@ fun BitmapOptionView(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     ComButton(
-                        value = "取消",
+                        value = stringResource(id = R.string.cancel_v1),
                         containerColor = ColorE9E9E9,
                         click = cancel
                     )
                     ComButton(
-                        value = "确定",
+                        value = stringResource(id = R.string.confirm),
                         click = {
                             confirm.invoke(
                                 BitmapOption(
@@ -676,14 +675,14 @@ fun ModifyLineDialog(
                 modifier = Modifier.padding(10.dp, 0.dp)
             ) {
                 Text(
-                    text = "编辑线条元素",
+                    text = stringResource(id = R.string.modify_line_element),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(0.dp, 6.dp),
                     textAlign = TextAlign.Center
                 )
 
-                ChoseOption(title = "线条为虚线", chooseState = isDishLine){
+                ChoseOption(title = stringResource(id = R.string.line_is_dash), chooseState = isDishLine){
                     isDishLine = !isDishLine
                 }
 
@@ -694,18 +693,24 @@ fun ModifyLineDialog(
                     horizontalArrangement = Arrangement.SpaceEvenly
                 ) {
                     ComButton(
-                        value = "取消",
+                        value = stringResource(id = R.string.cancel_v1),
                         containerColor = ColorE9E9E9,
                         click = onCancel
                     )
                     ComButton(
-                        value = "确定",
+                        value = stringResource(id = R.string.confirm),
                         click = {
                             confirm.invoke(
                                 if (isDishLine){
-                                    LineDashedParam()
+                                    LineDashedParam().apply {
+                                        strokeWidth = 2f
+                                        style = Paint.Style.STROKE
+                                    }
                                 }else{
-                                    LineParam()
+                                    LineParam().apply {
+                                        strokeWidth = 2f
+                                        style = Paint.Style.STROKE
+                                    }
                                 }
                             )
                         }

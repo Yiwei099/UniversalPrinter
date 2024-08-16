@@ -1,5 +1,6 @@
 package com.eiviayw.libdraw.bean
 
+import android.graphics.Paint
 import com.eiviayw.library.Constant
 import com.eiviayw.library.bean.param.LineDashedParam
 import com.eiviayw.library.bean.param.LineParam
@@ -64,7 +65,10 @@ class DefaultDrawItemParam private constructor() {
         }
     )
 
-    fun getDashLineParam() = LineDashedParam()
+    fun getDashLineParam() = LineDashedParam().apply {
+        strokeWidth = 2f
+        style = Paint.Style.STROKE
+    }
 
     fun getLineParam() = LineParam()
 }

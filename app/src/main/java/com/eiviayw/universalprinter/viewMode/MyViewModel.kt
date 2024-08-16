@@ -4,10 +4,9 @@ import android.bluetooth.BluetoothDevice
 import android.hardware.usb.UsbDevice
 import android.text.TextUtils
 import androidx.lifecycle.ViewModel
+import com.eiviayw.libcommon.utils.StringUtils
 import com.eiviayw.universalprinter.bean.MyPrinter
 import com.eiviayw.universalprinter.bean.state.ViewState
-import com.eiviayw.libcommon.utils.StringUtils
-import com.eiviayw.library.draw.BitmapOption
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

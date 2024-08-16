@@ -1,6 +1,5 @@
 package com.eiviayw.universalprinter.ui
 
-import android.content.Intent
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.runtime.Composable
@@ -10,19 +9,17 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.eiviayw.libcommon.R
-import com.eiviayw.universalprinter.bean.MyPrinter
-import com.eiviayw.universalprinter.ui.create.BindPrinterView
-import com.eiviayw.universalprinter.ui.print.StartPrintView
-import com.eiviayw.universalprinter.viewMode.MyViewModel
 import com.eiviayw.libcommon.views.ComItemOption
 import com.eiviayw.libcommon.views.ComTopBar
 import com.eiviayw.libcommon.views.ComVerticalLine
 import com.eiviayw.libcommon.views.EmptyView
-import com.eiviayw.libdraw.DrawingActivity
+import com.eiviayw.universalprinter.bean.MyPrinter
+import com.eiviayw.universalprinter.ui.create.BindPrinterView
+import com.eiviayw.universalprinter.ui.print.StartPrintView
+import com.eiviayw.universalprinter.viewMode.MyViewModel
 
 @Composable
 fun Home(viewModel: MyViewModel = viewModel()) {

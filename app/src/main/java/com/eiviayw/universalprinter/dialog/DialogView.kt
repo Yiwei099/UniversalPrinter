@@ -29,6 +29,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -47,6 +48,7 @@ import com.eiviayw.universalprinter.util.UsbBroadcastReceiver
 import com.eiviayw.universalprinter.viewMode.MyViewModel
 import com.eiviayw.libcommon.views.ChoseOption
 import com.eiviayw.libcommon.views.ComButton
+import com.eiviayw.libcommon.R
 
 @Composable
 fun ConnectModeDialog(
@@ -64,7 +66,7 @@ fun ConnectModeDialog(
     var chooseMode by remember { mutableStateOf(defaultChooseMode) }
 
     ItemOptionList(
-        title = "选择连接方式",
+        title = stringResource(id = R.string.choose_connection_type_v1),
         data = connectModeList,
         modifier = modifier,
         getItemName = { it.label },
@@ -95,7 +97,7 @@ fun PrinterModeDialog(
     var chooseMode by remember { mutableStateOf(defaultChooseMode) }
 
     ItemOptionList(
-        title = "选择打印模式",
+        title = stringResource(id = R.string.choose_printing_mode_v1),
         data = printerModeList,
         modifier = modifier,
         getItemName = { it.label },
@@ -122,7 +124,7 @@ fun SDKModeDialog(
     var chooseMode by remember { mutableStateOf(defaultChooseMode) }
 
     ItemOptionList(
-        title = "选择SDK策略",
+        title = stringResource(id = R.string.choose_sdk_policy_v1),
         data = dataList,
         modifier = modifier,
         getItemName = { it.label },
@@ -211,7 +213,7 @@ fun UsbPrinterDialogV1(
             modifier = Modifier.padding(10.dp, 0.dp)
         ) {
             Text(
-                text = "选择USB设备",
+                text = stringResource(id = R.string.choose_usb_device),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(0.dp, 6.dp),
@@ -242,12 +244,12 @@ fun UsbPrinterDialogV1(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 ComButton(
-                    value = "取消",
+                    value = stringResource(id = R.string.cancel_v1),
                     containerColor = ColorE9E9E9,
                     click = cancel
                 )
                 ComButton(
-                    value = "确定",
+                    value = stringResource(id = R.string.confirm),
                     click = {
                         confirm.invoke(chooseDevice)
                     }
@@ -304,7 +306,7 @@ fun BleToothPrinterDialogV1(
             modifier = Modifier.padding(10.dp, 0.dp)
         ) {
             Text(
-                text = "选择蓝牙设备",
+                text = stringResource(id = R.string.choose_ble_device),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(0.dp, 6.dp),
@@ -335,12 +337,12 @@ fun BleToothPrinterDialogV1(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 ComButton(
-                    value = "取消",
+                    value = stringResource(id = R.string.cancel_v1),
                     containerColor = ColorE9E9E9,
                     click = cancel
                 )
                 ComButton(
-                    value = "确定",
+                    value = stringResource(id = R.string.confirm),
                     click = {
                         confirm.invoke(address)
                     }
@@ -367,7 +369,7 @@ fun PaperSizeDialog(
     ) {
         Column {
             Text(
-                text = "选择纸张尺寸",
+                text = stringResource(id = R.string.choose_page_size),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(0.dp, 6.dp),
@@ -393,12 +395,12 @@ fun PaperSizeDialog(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 ComButton(
-                    value = "取消",
+                    value = stringResource(id = R.string.cancel_v1),
                     containerColor = ColorE9E9E9,
                     click = cancel
                 )
                 ComButton(
-                    value = "确定",
+                    value = stringResource(id = R.string.confirm),
                     click = {
                         confirm.invoke(chooseMode)
                     }
@@ -418,7 +420,7 @@ fun BuildModeDialog(
     var chooseMode by remember { mutableStateOf(defaultChooseMode) }
 
     ItemOptionList(
-        title = "选择数据源类型",
+        title = stringResource(id = R.string.choose_source_type),
         data = mutableListOf<BuildMode>().apply {
             add(BuildMode.Graphic)
             add(BuildMode.Text)
@@ -452,7 +454,7 @@ fun ForWordModeDialog(
     ) {
         Column {
             Text(
-                text = "选择打印方向",
+                text = stringResource(id = R.string.choose_print_for_word),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(0.dp, 6.dp),
@@ -481,12 +483,12 @@ fun ForWordModeDialog(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 ComButton(
-                    value = "取消",
+                    value = stringResource(id = R.string.cancel_v1),
                     containerColor = ColorE9E9E9,
                     click = cancel
                 )
                 ComButton(
-                    value = "确定",
+                    value = stringResource(id = R.string.confirm),
                     click = {
                         confirm.invoke(chooseMode)
                     }
@@ -512,7 +514,7 @@ fun DensityDialog(
     ) {
         Column {
             Text(
-                text = "选择打印浓度",
+                text = stringResource(id = R.string.choose_print_density),
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(0.dp, 6.dp),
@@ -555,12 +557,12 @@ fun DensityDialog(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 ComButton(
-                    value = "取消",
+                    value = stringResource(id = R.string.cancel_v1),
                     containerColor = ColorE9E9E9,
                     click = cancel
                 )
                 ComButton(
-                    value = "确定",
+                    value = stringResource(id = R.string.confirm),
                     click = {
                         confirm.invoke(chooseMode)
                     }
@@ -613,12 +615,12 @@ fun <T> ItemOptionList(
                 horizontalArrangement = Arrangement.SpaceEvenly
             ) {
                 ComButton(
-                    value = "取消",
+                    value = stringResource(id = R.string.cancel_v1),
                     containerColor = ColorE9E9E9,
                     click = cancel
                 )
                 ComButton(
-                    value = "确定",
+                    value = stringResource(id = R.string.confirm),
                     click = confirm
                 )
             }

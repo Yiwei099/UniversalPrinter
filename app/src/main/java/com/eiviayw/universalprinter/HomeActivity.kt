@@ -2,7 +2,6 @@ package com.eiviayw.universalprinter
 
 import android.Manifest
 import android.os.Bundle
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -12,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.eiviayw.libcommon.BaseApplication
 import com.eiviayw.libcommon.theme.UniversalPrinterTheme
 import com.eiviayw.universalprinter.ui.Home
 import com.eiviayw.universalprinter.util.PermissionUtil
@@ -24,10 +22,9 @@ class HomeActivity: ComponentActivity() {
             val granted = permissions.entries.all { it.value }
             if (granted) {
                 //权限申请通过
-                Log.d(BaseApplication.TAG, "程序权限列表正常")
             }else{
                 // 权限被用户拒绝，需要提示用户或者自动回退
-                Toast.makeText(this, "蓝牙权限被拒绝，无法使用蓝牙功能", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(com.eiviayw.libcommon.R.string.application_need_blue_tooth_permission), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -62,7 +59,7 @@ class HomeActivity: ComponentActivity() {
             add(Manifest.permission.ACCESS_COARSE_LOCATION)
             PermissionUtil.getInstance().getPermissionFromSDKVersionS()
         }, onSuccess = {
-                Log.d(BaseApplication.TAG, "initData: Permission all pass")
+                //Permission all pass
         }, onFailure = {
             //申请权限
             permReqLauncher.launch(it.toTypedArray())

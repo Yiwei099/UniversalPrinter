@@ -2,9 +2,7 @@ package com.eiviayw.libdraw.ui
 
 import android.app.Activity.RESULT_OK
 import android.util.Log
-import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -12,7 +10,6 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
@@ -23,7 +20,6 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawBehind
@@ -31,8 +27,8 @@ import androidx.compose.ui.graphics.StrokeCap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.platform.LocalConfiguration
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
@@ -47,9 +43,9 @@ import com.eiviayw.libcommon.utils.WeakDataHolder
 import com.eiviayw.libcommon.views.ComButton
 import com.eiviayw.libcommon.views.ComItemOption
 import com.eiviayw.libcommon.views.ComTopBar
-import com.eiviayw.libcommon.views.EmptyView
 import com.eiviayw.libcommon.views.EmptyViewV1
 import com.eiviayw.libdraw.DrawingViewMode
+import com.eiviayw.libcommon.R
 import com.eiviayw.libdraw.bean.DefaultDrawItemParam
 import com.eiviayw.libdraw.constant.ParamType
 import com.eiviayw.library.bean.param.LineDashedParam
@@ -97,7 +93,7 @@ fun DrawingHome(
     })
 
     Column(modifier.fillMaxSize()) {
-        ComTopBar(title = "打印数据源", actionTitle = "添加") {
+        ComTopBar(title = stringResource(id = R.string.print_source_data), actionTitle = stringResource(id = R.string.add)) {
             viewModel.showParamTypePopupView(true)
         }
 
@@ -154,7 +150,7 @@ fun DrawingHome(
                                 )
                             )
                         },
-                    tips = "内容预览区域"
+                    tips = stringResource(id = R.string.content_preview_area)
                 )
             } else {
                 Image(
@@ -162,7 +158,7 @@ fun DrawingHome(
                         .weight(0.5f)
                         .fillMaxHeight(),
                     bitmap = bitmap.asImageBitmap(),
-                    contentDescription = "内容预览"
+                    contentDescription = stringResource(id = R.string.content_preview)
                 )
             }
 
@@ -182,7 +178,7 @@ fun DrawingHome(
                                 )
                             )
                         },
-                    tips = "元素列表区域"
+                    tips = stringResource(id = R.string.element_list_area)
                 )
             } else {
                 LazyColumn(
@@ -203,12 +199,12 @@ fun DrawingHome(
                 ) {
                     items(paramList.toList()) { item ->
                         when (item) {
-                            is TextParam -> ComItemOption(title = "文本元素", value = item.text)
-                            is MultiElementParam -> ComItemOption(title = "混排元素", value = "")
-                            is LineParam -> ComItemOption(title = "分割线元素", value = "实线")
+                            is TextParam -> ComItemOption(title = stringResource(id = R.string.text_element), value = item.text)
+                            is MultiElementParam -> ComItemOption(title = stringResource(id = R.string.multi_element), value = "")
+                            is LineParam -> ComItemOption(title = stringResource(id = R.string.line_element), value = stringResource(id = R.string.line))
                             is LineDashedParam -> ComItemOption(
-                                title = "分割线元素",
-                                value = "虚线"
+                                title = stringResource(id = R.string.line_element),
+                                value = stringResource(id = R.string.dash)
                             )
                         }
                     }
@@ -223,7 +219,7 @@ fun DrawingHome(
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             ComButton(
-                value = "快速添加单列文本",
+                value = stringResource(id = R.string.auto_add_single_text_element),
                 containerColor = Color177FF,
                 click = {
                     viewModel.addParam(DefaultDrawItemParam.getInstance().getSingleTextParam())
@@ -231,7 +227,7 @@ fun DrawingHome(
             )
 
             ComButton(
-                value = "快速添加双列文本",
+                value = stringResource(id = R.string.auto_add_double_text_element),
                 containerColor = Color177FF,
                 click = {
                     viewModel.addParam(DefaultDrawItemParam.getInstance().getPairTextParam())
@@ -239,7 +235,7 @@ fun DrawingHome(
             )
 
             ComButton(
-                value = "快速添加三列文本",
+                value = stringResource(id = R.string.auto_add_tripe_element),
                 containerColor = Color177FF,
                 click = {
                     viewModel.addParam(DefaultDrawItemParam.getInstance().getTripleTextParam())
@@ -247,7 +243,7 @@ fun DrawingHome(
             )
 
             ComButton(
-                value = "快速添加虚线分割线",
+                value = stringResource(id = R.string.auto_add_dash_line_element),
                 containerColor = Color177FF,
                 click = {
                     viewModel.addParam(DefaultDrawItemParam.getInstance().getDashLineParam())
@@ -255,7 +251,7 @@ fun DrawingHome(
             )
 
             ComButton(
-                value = "快速添加实线分割线",
+                value = stringResource(id = R.string.auto_add_line_element),
                 containerColor = Color177FF,
                 click = {
                     viewModel.addParam(DefaultDrawItemParam.getInstance().getLineParam())
@@ -263,7 +259,7 @@ fun DrawingHome(
             )
 
             ComButton(
-                value = "返回",
+                value = stringResource(id = R.string.cancel),
                 containerColor = ColorE9E9E9,
                 click = {
                     closeActivity = true
@@ -271,7 +267,7 @@ fun DrawingHome(
             )
 
             ComButton(
-                value = "保存",
+                value = stringResource(id = R.string.save),
                 containerColor = OrangeFF870D,
                 click = {
                     viewModel.getResultData()?.let {

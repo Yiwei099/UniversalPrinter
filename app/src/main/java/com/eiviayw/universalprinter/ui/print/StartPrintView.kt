@@ -103,7 +103,7 @@ fun StartPrintView(
                         printer.startPosition = it
                         printer.markDataChange()
                     },
-                    label = { Text(text = "左侧起始位置") },
+                    label = { Text(text = stringResource(id = R.string.start_position)) },
                     modifier = Modifier.padding(0.dp,20.dp),
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
@@ -117,7 +117,7 @@ fun StartPrintView(
                         printer.topPosition = it
                         printer.markDataChange()
                     },
-                    label = { Text(text = "顶部起始位置") },
+                    label = { Text(text = stringResource(id = R.string.top_position)) },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                     ),
@@ -128,8 +128,8 @@ fun StartPrintView(
         item {
             StepOption(
                 Modifier.padding(0.dp, 10.dp),
-                stepTitle = "选择纸张尺寸",
-                stepTips = "纸张尺寸",
+                stepTitle = stringResource(id = R.string.choose_page_size),
+                stepTips = stringResource(id = R.string.page_size),
                 value = printer.paperSize.label
             ) {
                 viewMode.showPaperListDialog(true)
@@ -139,8 +139,8 @@ fun StartPrintView(
         item {
             StepOption(
                 Modifier.padding(0.dp, 10.dp),
-                stepTitle = "选择数据源类型",
-                stepTips = "数据源类型",
+                stepTitle = stringResource(id = R.string.choose_source_type),
+                stepTips = stringResource(id = R.string.source_type),
                 value = printer.buildMode.label
             ) {
                 viewMode.showBuildListDialog(true)
@@ -151,8 +151,8 @@ fun StartPrintView(
             item {
                 StepOption(
                     Modifier.padding(0.dp, 10.dp),
-                    stepTitle = "选择打印方向",
-                    stepTips = "打印方向",
+                    stepTitle = stringResource(id = R.string.choose_print_for_word),
+                    stepTips = stringResource(id = R.string.print_for_word),
                     value = printer.forWordMode.label
                 ) {
                     viewMode.showForWordListDialog(true)
@@ -162,8 +162,8 @@ fun StartPrintView(
             item {
                 StepOption(
                     Modifier.padding(0.dp, 10.dp),
-                    stepTitle = "选择打印浓度",
-                    stepTips = "打印浓度",
+                    stepTitle = stringResource(id = R.string.choose_print_density),
+                    stepTips = stringResource(id = R.string.print_density),
                     value = printer.density.label
                 ) {
                     viewMode.showDensityListDialog(true)
@@ -181,7 +181,7 @@ fun StartPrintView(
                 ) {
                     ComButton(
                         modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
-                        value = "删除",
+                        value = stringResource(id = R.string.delete),
                         containerColor = ColorFF3434,
                         click = {
                             printer.releasePrinter()
@@ -191,7 +191,7 @@ fun StartPrintView(
 
                     ComButton(
                         modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
-                        value = "编辑",
+                        value = stringResource(id = R.string.modify),
                         containerColor = Color177FF,
                         click = {
                             viewMode.modifyPrinter(printer)
@@ -209,7 +209,7 @@ fun StartPrintView(
 
                     ComButton(
                         modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
-                        value = "编辑打印数据源",
+                        value = stringResource(id = R.string.modify_print_source_data),
                         containerColor = ColorCF5EEF,
                         click = {
                             WeakDataHolder.getInstance().saveData(WeakDataHolder.DATA,printer.getBitmapOption())
@@ -219,7 +219,7 @@ fun StartPrintView(
 
                     ComButton(
                         modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
-                        value = "缓存销毁",
+                        value = stringResource(id = R.string.destroy_cache),
                         containerColor = OrangeFF870D,
                         click = {
                             printer.releasePrinter()
@@ -228,14 +228,14 @@ fun StartPrintView(
 
                     ComButton(
                         modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
-                        value = "打印(${printTime})",
+                        value = stringResource(id = R.string.print_x, printTime),
                         click = {
                             if (printer.printDataIsNotEmpty()){
                                 printer.startPrint()
                                 return@ComButton
                             }
 
-                            Toast.makeText(context, "请先编辑打印数据源", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.please_modify_print_source_data_first), Toast.LENGTH_SHORT).show()
                         }
                     )
                 }
@@ -248,7 +248,7 @@ fun StartPrintView(
                 ) {
                     ComButton(
                         modifier = Modifier.padding(0.dp, 0.dp, 20.dp, 0.dp),
-                        value = "返回",
+                        value = stringResource(id = R.string.cancel),
                         containerColor = ColorE9E9E9,
                         click = {
                             viewMode.showModifyPrinterView(false)
