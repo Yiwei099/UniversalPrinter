@@ -72,10 +72,12 @@ dependencies {
     implementation libs.androidx.ui.tooling.preview
 
     implementation libs.runtime.livedata
-    implementation libs.printSupport
+
     implementation libs.kotlinx.coroutines.android
     implementation libs.kotlinx.coroutines.core
-    implementation project(':libdraw')
+
+    implementation project(':libprint')
+    implementation project(':libcommon')
 
     debugImplementation libs.androidx.ui.tooling
     debugImplementation libs.androidx.ui.test.manifest

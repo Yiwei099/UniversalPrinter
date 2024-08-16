@@ -12,8 +12,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
 import com.eiviayw.libcommon.theme.UniversalPrinterTheme
-import com.eiviayw.universalprinter.ui.Home
-import com.eiviayw.universalprinter.util.PermissionUtil
+import com.eiviayw.libcommon.utils.PermissionUtil
+import com.eiviayw.libprint.ui.Home
 
 class HomeActivity: ComponentActivity() {
 
