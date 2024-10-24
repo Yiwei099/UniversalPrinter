@@ -11,8 +11,8 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.eiviayw.libcommon.theme.UniversalPrinterTheme
-import com.eiviayw.libcommon.utils.PermissionUtil
+import com.eiviayw.mycommon.theme.UniversalPrinterTheme
+import com.eiviayw.mycommon.utils.PermissionUtil
 import com.eiviayw.libprint.ui.Home
 
 class HomeActivity: ComponentActivity() {
@@ -24,7 +24,7 @@ class HomeActivity: ComponentActivity() {
                 //权限申请通过
             }else{
                 // 权限被用户拒绝，需要提示用户或者自动回退
-                Toast.makeText(this, getString(com.eiviayw.libcommon.R.string.application_need_blue_tooth_permission), Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, getString(com.eiviayw.mycommon.R.string.application_need_blue_tooth_permission), Toast.LENGTH_SHORT).show()
             }
         }
 

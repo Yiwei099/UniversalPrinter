@@ -4,16 +4,9 @@ import android.hardware.usb.UsbDevice
 import android.text.TextUtils
 import android.util.Log
 import com.eiviayw.library.draw.BitmapOption
-import com.eiviayw.print.base.BasePrinter
-import com.eiviayw.print.bean.mission.GraphicMission
-import com.eiviayw.print.gprinter.EscBtGPrinter
-import com.eiviayw.print.gprinter.EscNetGPrinter
-import com.eiviayw.print.gprinter.EscUsbGPrinter
-import com.eiviayw.print.gprinter.TscBtGPrinter
-import com.eiviayw.print.gprinter.TscNetGPrinter
-import com.eiviayw.print.gprinter.TscUsbGPrinter
-import com.eiviayw.print.native.NativeUsbPrinter
-import com.eiviayw.libcommon.BaseApplication
+import com.eiviayw.libcommon.base.BasePrinter
+import com.eiviayw.libcommon.bean.mission.GraphicMission
+import com.eiviayw.libgprinter.native.NativeUsbPrinter
 import com.eiviayw.libprint.constant.BuildMode
 import com.eiviayw.libprint.constant.ConnectMode
 import com.eiviayw.libprint.constant.DensityMode
@@ -21,6 +14,13 @@ import com.eiviayw.libprint.constant.ForWordMode
 import com.eiviayw.libprint.constant.PaperMode
 import com.eiviayw.libprint.constant.PrinterMode
 import com.eiviayw.libprint.constant.SDKMode
+import com.eiviayw.mycommon.BaseApplication
+import com.eiviayw.print.gprinter.EscBtGPrinter
+import com.eiviayw.print.gprinter.EscNetGPrinter
+import com.eiviayw.print.gprinter.EscUsbGPrinter
+import com.eiviayw.print.gprinter.TscBtGPrinter
+import com.eiviayw.print.gprinter.TscNetGPrinter
+import com.eiviayw.print.gprinter.TscUsbGPrinter
 import com.gprinter.utils.Command
 
 data class MyPrinter(
@@ -40,7 +40,7 @@ data class MyPrinter(
     var forWordMode: ForWordMode = ForWordMode.NORMAL,//打印方向
     var density: DensityMode = DensityMode.DENSITY_0,//打印浓度
 
-    var supportPrinter:BasePrinter? = null,//打印机实例
+    var supportPrinter: BasePrinter? = null,//打印机实例
 
     var dataChange:Boolean = true,//参数是否被修改
 ){

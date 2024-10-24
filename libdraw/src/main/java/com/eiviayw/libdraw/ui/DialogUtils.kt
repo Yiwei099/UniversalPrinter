@@ -35,13 +35,9 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
-import com.eiviayw.libcommon.R
-import com.eiviayw.libcommon.theme.ColorCF5EEF
-import com.eiviayw.libcommon.theme.ColorE9E9E9
-import com.eiviayw.libcommon.views.ChoseOption
-import com.eiviayw.libcommon.views.ComButton
-import com.eiviayw.libcommon.views.ComItemOption
-import com.eiviayw.libcommon.views.ComLine
+import com.eiviayw.mycommon.R
+import com.eiviayw.mycommon.theme.ColorCF5EEF
+import com.eiviayw.mycommon.theme.ColorE9E9E9
 import com.eiviayw.libdraw.constant.TextAlignType
 import com.eiviayw.libdraw.constant.TextTypeFace
 import com.eiviayw.libdraw.utils.DrawLibUtils
@@ -51,6 +47,10 @@ import com.eiviayw.library.bean.param.LineParam
 import com.eiviayw.library.bean.param.MultiElementParam
 import com.eiviayw.library.bean.param.TextParam
 import com.eiviayw.library.draw.BitmapOption
+import com.eiviayw.mycommon.views.ChoseOption
+import com.eiviayw.mycommon.views.ComButton
+import com.eiviayw.mycommon.views.ComItemOption
+import com.eiviayw.mycommon.views.ComLine
 
 @Composable
 fun ModifySingleTextDialog(

@@ -6,16 +6,17 @@ lifecycleRuntimeKtx = "2.6.1"
 activityCompose = "1.8.0"
 composeBom = "2023.08.00"
 liveData = "1.4.0"
-printSupport = "1.2.3"
-drawingSupport = "1.1.1"
+drawingSupport = "1.1.7"
 composeViewModel = "2.6.1"
 coroutinesCore = "1.8.0"
 coroutinesAndroid = "1.8.0"
 appcompat = "1.6.1"
 material = "1.10.0"
-junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
+printSupport = "1.3.0"
+#epson = "1.3.0"
+#bixolon = "1.3.0"
+#gPrinter = "1.3.0"
+
 
 [libraries]
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
@@ -29,16 +30,17 @@ androidx-ui-tooling-preview = { group = "androidx.compose.ui", name = "ui-toolin
 androidx-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-test-manifest" }
 androidx-material3 = { group = "androidx.compose.material3", name = "material3" }
 runtime-livedata = { group = "androidx.compose.runtime", name = "runtime-livedata", version.ref = "liveData"}
-printSupport = { group = "com.github.Yiwei099", name="PrintSupport", version.ref = "printSupport" }
 drawingSupport = { group = "com.github.Yiwei099", name="DrawingSupport", version.ref = "drawingSupport" }
 viewModelCompose = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-compose", version.ref = "composeViewModel" }
 kotlinx-coroutines-android = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-android", version.ref = "coroutinesAndroid"}
 kotlinx-coroutines-core = { group = "org.jetbrains.kotlinx", name = "kotlinx-coroutines-core", version.ref = "coroutinesCore"}
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
-junit = { group = "junit", name = "junit", version.ref = "junit" }
-androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+epsonPrinter = { group = "com.github.Yiwei099.PrintSupport", name="Epson", version.ref = "printSupport" }
+bixolonPrinter = { group = "com.github.Yiwei099.PrintSupport", name="Bixolon", version.ref = "printSupport" }
+printer = { group = "com.github.Yiwei099.PrintSupport", name="GPrinter", version.ref = "printSupport" }
+printerCommon = { group = "com.github.Yiwei099.PrintSupport", name="libcommon", version.ref = "printSupport" }
+#printSupport = { group = "com.github.Yiwei099", name="PrintSupport", version.ref = "printSupport" }
 
 
 [plugins]

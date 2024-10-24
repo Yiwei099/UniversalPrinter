@@ -42,5 +42,5 @@ dependencies {
     implementation libs.material
 
     api libs.drawingSupport
-    api project(':libcommon')
+    api project(':mycommon')
 }

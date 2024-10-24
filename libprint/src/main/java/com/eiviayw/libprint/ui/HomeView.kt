@@ -11,15 +11,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.eiviayw.libcommon.R
-import com.eiviayw.libcommon.views.ComItemOption
-import com.eiviayw.libcommon.views.ComTopBar
-import com.eiviayw.libcommon.views.ComVerticalLine
-import com.eiviayw.libcommon.views.EmptyView
+import com.eiviayw.mycommon.R
+import com.eiviayw.mycommon.views.ComTopBar
 import com.eiviayw.libprint.bean.MyPrinter
 import com.eiviayw.libprint.ui.create.BindPrinterView
 import com.eiviayw.libprint.ui.print.StartPrintView
 import com.eiviayw.libprint.viewMode.MyViewModel
+import com.eiviayw.mycommon.views.ComItemOption
+import com.eiviayw.mycommon.views.ComVerticalLine
+import com.eiviayw.mycommon.views.EmptyView
 
 @Composable
 fun Home(viewModel: MyViewModel = viewModel()) {

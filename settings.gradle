@@ -34,5 +34,5 @@ dependencyResolutionManagement {
 rootProject.name = "UniversalPrinter"
 include ':app'
 include ':libdraw'
-include ':libcommon'
+include ':mycommon'
 include ':libprint'

@@ -33,7 +33,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
-import com.eiviayw.libcommon.BaseApplication
 import com.eiviayw.libprint.constant.BuildMode
 import com.eiviayw.libprint.constant.ConnectMode
 import com.eiviayw.libprint.constant.DensityMode
@@ -41,14 +40,15 @@ import com.eiviayw.libprint.constant.ForWordMode
 import com.eiviayw.libprint.constant.PaperMode
 import com.eiviayw.libprint.constant.PrinterMode
 import com.eiviayw.libprint.constant.SDKMode
-import com.eiviayw.libcommon.theme.ColorE9E9E9
-import com.eiviayw.libcommon.utils.BlueToothBroadcastReceiver
-import com.eiviayw.libcommon.utils.BlueToothHelper
-import com.eiviayw.libcommon.utils.UsbBroadcastReceiver
+import com.eiviayw.mycommon.theme.ColorE9E9E9
 import com.eiviayw.libprint.viewMode.MyViewModel
-import com.eiviayw.libcommon.views.ChoseOption
-import com.eiviayw.libcommon.views.ComButton
-import com.eiviayw.libcommon.R
+import com.eiviayw.mycommon.R
+import com.eiviayw.mycommon.BaseApplication
+import com.eiviayw.mycommon.utils.BlueToothBroadcastReceiver
+import com.eiviayw.mycommon.utils.BlueToothHelper
+import com.eiviayw.mycommon.utils.UsbBroadcastReceiver
+import com.eiviayw.mycommon.views.ChoseOption
+import com.eiviayw.mycommon.views.ComButton
 
 @Composable
 fun ConnectModeDialog(

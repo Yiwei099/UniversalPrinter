@@ -2,7 +2,6 @@ package com.eiviayw.libprint.ui.print
 
 import android.app.Activity
 import android.content.Intent
-import android.util.Log
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -31,23 +30,23 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.eiviayw.libcommon.R
+import com.eiviayw.mycommon.R
 import com.eiviayw.libprint.bean.MyPrinter
 import com.eiviayw.libprint.constant.PaperMode
 import com.eiviayw.libprint.dialog.BuildModeDialog
 import com.eiviayw.libprint.dialog.DensityDialog
 import com.eiviayw.libprint.dialog.ForWordModeDialog
 import com.eiviayw.libprint.dialog.PaperSizeDialog
-import com.eiviayw.libcommon.theme.Color177FF
-import com.eiviayw.libcommon.theme.ColorCF5EEF
-import com.eiviayw.libcommon.theme.ColorE9E9E9
-import com.eiviayw.libcommon.theme.ColorFF3434
-import com.eiviayw.libcommon.theme.OrangeFF870D
-import com.eiviayw.libcommon.utils.WeakDataHolder
+import com.eiviayw.mycommon.theme.Color177FF
+import com.eiviayw.mycommon.theme.ColorCF5EEF
+import com.eiviayw.mycommon.theme.ColorE9E9E9
+import com.eiviayw.mycommon.theme.ColorFF3434
+import com.eiviayw.mycommon.theme.OrangeFF870D
+import com.eiviayw.mycommon.utils.WeakDataHolder
 import com.eiviayw.libdraw.DrawingActivity
 import com.eiviayw.libprint.viewMode.MyViewModel
-import com.eiviayw.libcommon.views.ComButton
-import com.eiviayw.libcommon.views.StepOption
+import com.eiviayw.mycommon.views.ComButton
+import com.eiviayw.mycommon.views.StepOption
 import com.eiviayw.library.draw.BitmapOption
 
 @Composable

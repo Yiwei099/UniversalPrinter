@@ -4,7 +4,7 @@ import android.bluetooth.BluetoothDevice
 import android.hardware.usb.UsbDevice
 import android.text.TextUtils
 import androidx.lifecycle.ViewModel
-import com.eiviayw.libcommon.utils.StringUtils
+import com.eiviayw.mycommon.utils.StringUtils
 import com.eiviayw.libprint.bean.MyPrinter
 import com.eiviayw.libprint.bean.state.ViewState
 import kotlinx.coroutines.flow.MutableStateFlow

@@ -22,8 +22,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.eiviayw.libcommon.BaseApplication
-import com.eiviayw.libcommon.R
+import com.eiviayw.mycommon.R
 import com.eiviayw.libprint.constant.ConnectMode
 import com.eiviayw.libprint.constant.PrinterMode
 import com.eiviayw.libprint.constant.SDKMode
@@ -33,8 +32,9 @@ import com.eiviayw.libprint.dialog.PrinterModeDialog
 import com.eiviayw.libprint.dialog.SDKModeDialog
 import com.eiviayw.libprint.dialog.UsbPrinterDialogV1
 import com.eiviayw.libprint.viewMode.MyViewModel
-import com.eiviayw.libcommon.views.ComButton
-import com.eiviayw.libcommon.views.StepOption
+import com.eiviayw.mycommon.BaseApplication
+import com.eiviayw.mycommon.views.ComButton
+import com.eiviayw.mycommon.views.StepOption
 
 @Composable
 fun BindPrinterView(

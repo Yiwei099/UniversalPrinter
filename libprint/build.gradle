@@ -41,7 +41,12 @@ dependencies {
     implementation libs.androidx.appcompat
     implementation libs.material
 
-    implementation libs.printSupport
+    implementation libs.epsonPrinter
+    implementation libs.bixolonPrinter
+    implementation libs.printer
+    implementation libs.printerCommon
+
+//    implementation libs.printSupport
 
     implementation project(':libdraw')
 }

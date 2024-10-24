@@ -36,17 +36,16 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.eiviayw.libcommon.BaseApplication
-import com.eiviayw.libcommon.theme.Color177FF
-import com.eiviayw.libcommon.theme.ColorE9E9E9
-import com.eiviayw.libcommon.theme.OrangeFF870D
-import com.eiviayw.libcommon.utils.WeakDataHolder
-import com.eiviayw.libcommon.views.ComButton
-import com.eiviayw.libcommon.views.ComItemOption
-import com.eiviayw.libcommon.views.ComTopBar
-import com.eiviayw.libcommon.views.EmptyViewV1
+import com.eiviayw.mycommon.theme.Color177FF
+import com.eiviayw.mycommon.theme.ColorE9E9E9
+import com.eiviayw.mycommon.theme.OrangeFF870D
+import com.eiviayw.mycommon.utils.WeakDataHolder
+import com.eiviayw.mycommon.views.ComButton
+import com.eiviayw.mycommon.views.ComItemOption
+import com.eiviayw.mycommon.views.ComTopBar
+import com.eiviayw.mycommon.views.EmptyViewV1
 import com.eiviayw.libdraw.DrawingViewMode
-import com.eiviayw.libcommon.R
+import com.eiviayw.mycommon.R
 import com.eiviayw.libdraw.bean.DefaultDrawItemParam
 import com.eiviayw.libdraw.constant.ParamType
 import com.eiviayw.library.bean.param.LineDashedParam
@@ -54,6 +53,7 @@ import com.eiviayw.library.bean.param.LineParam
 import com.eiviayw.library.bean.param.MultiElementParam
 import com.eiviayw.library.bean.param.TextParam
 import com.eiviayw.library.draw.BitmapOption
+import com.eiviayw.mycommon.BaseApplication
 
 @Composable
 fun DrawingHome(

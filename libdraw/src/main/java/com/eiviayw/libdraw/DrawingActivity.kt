@@ -8,10 +8,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.eiviayw.libcommon.theme.UniversalPrinterTheme
-import com.eiviayw.libcommon.utils.WeakDataHolder
+import com.eiviayw.mycommon.theme.UniversalPrinterTheme
 import com.eiviayw.libdraw.ui.DrawingHome
 import com.eiviayw.library.draw.BitmapOption
+import com.eiviayw.mycommon.utils.WeakDataHolder
 
 class DrawingActivity: ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,7 +29,8 @@ class DrawingActivity: ComponentActivity() {
                     color = MaterialTheme.colorScheme.background
                 ) {
                     Column {
-                        DrawingHome(bitmapOption = WeakDataHolder.getInstance().getData(WeakDataHolder.DATA,BitmapOption()))
+                        DrawingHome(bitmapOption = WeakDataHolder.getInstance().getData(
+                            WeakDataHolder.DATA,BitmapOption()))
                     }
                 }
             }
