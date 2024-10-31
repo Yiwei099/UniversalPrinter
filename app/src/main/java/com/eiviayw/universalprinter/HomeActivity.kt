@@ -15,16 +15,20 @@ import com.eiviayw.mycommon.theme.UniversalPrinterTheme
 import com.eiviayw.mycommon.utils.PermissionUtil
 import com.eiviayw.libprint.ui.Home
 
-class HomeActivity: ComponentActivity() {
+class HomeActivity : ComponentActivity() {
 
     private val permReqLauncher =
         registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
             val granted = permissions.entries.all { it.value }
             if (granted) {
                 //权限申请通过
-            }else{
+            } else {
                 // 权限被用户拒绝，需要提示用户或者自动回退
-                Toast.makeText(this, getString(com.eiviayw.mycommon.R.string.application_need_blue_tooth_permission), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    this,
+                    getString(com.eiviayw.mycommon.R.string.application_need_blue_tooth_permission),
+                    Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
@@ -51,18 +55,18 @@ class HomeActivity: ComponentActivity() {
         }
     }
 
-    private fun initData(){
+    private fun initData() {
         PermissionUtil.getInstance().checkPermissionV1(
             permissions = mutableListOf<String>().apply {
-            add(Manifest.permission.BLUETOOTH)
-            add(Manifest.permission.ACCESS_FINE_LOCATION)
-            add(Manifest.permission.ACCESS_COARSE_LOCATION)
-            PermissionUtil.getInstance().getPermissionFromSDKVersionS()
-        }, onSuccess = {
+                add(Manifest.permission.BLUETOOTH)
+                add(Manifest.permission.ACCESS_FINE_LOCATION)
+                add(Manifest.permission.ACCESS_COARSE_LOCATION)
+                addAll(PermissionUtil.getInstance().getPermissionFromSDKVersionS())
+            }, onSuccess = {
                 //Permission all pass
-        }, onFailure = {
-            //申请权限
-            permReqLauncher.launch(it.toTypedArray())
-        })
+            }, onFailure = {
+                //申请权限
+                permReqLauncher.launch(it.toTypedArray())
+            })
     }
 }
