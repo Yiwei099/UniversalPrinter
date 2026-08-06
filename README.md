@@ -15,7 +15,3 @@
 ## 更新日志
 * 2024-08-02 增加SDK的使用演示(v1.0.0)
 * 2024-08-16 增加编辑打印数据源(图像类型)功能(v1.1.0)
-
-
-###  联系我催更
-![联系方式](https://github.com/Yiwei099/PrintSupport/blob/master/app/src/main/res/drawable/wechat_qr_code.png)
